@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herway — Book a ride</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700;800&family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#17131c;
+    --pink:#f0157a;
+    --pink-deep:#c00f63;
+    --pink-soft:#ffd9ec;
+    --pink-soft-2:#fff0f7;
+    --paper:#fbf8f5;
+    --graphite:#6e6874;
+    --line: rgba(23,19,28,0.1);
+    --green:#0f9d63;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh;
+    background:
+      radial-gradient(1200px 600px at 15% -10%, #ffe3f1 0%, transparent 60%),
+      radial-gradient(1000px 700px at 100% 10%, #ffeef7 0%, transparent 55%),
+      var(--paper);
+    color:var(--ink); font-family:"Inter", sans-serif; -webkit-font-smoothing:antialiased;
+    display:flex; flex-direction:column; align-items:center;
+  }
+  html.fa body{font-family:"Vazirmatn","Inter",sans-serif;}
+  *{ -webkit-tap-highlight-color: transparent; }
+
+  .en{display:inline;} .fa{display:none;}
+  html.fa .en{display:none;} html.fa .fa{display:inline;}
+  .en.block{display:block;} html.fa .en.block{display:none;}
+  .fa.block{display:none;} html.fa .fa.block{display:block;}
+
+  h1,h2,h3,.serif{font-family:"Fraunces", serif; font-weight:500; letter-spacing:-0.01em;}
+  html.fa h1, html.fa h2, html.fa h3, html.fa .serif{font-family:"Vazirmatn","Inter",sans-serif; font-weight:700; letter-spacing:0;}
+
+  /* ===== top bar ===== */
+  .topbar{width:100%; max-width:1080px; padding:26px 24px 0; display:flex; align-items:center; justify-content:space-between;}
+  .wordmark{font-family:"Fraunces", serif; font-weight:600; font-size:1.35rem; display:flex; align-items:center; gap:9px;}
+  html.fa .wordmark{font-family:"Vazirmatn",sans-serif; font-weight:700;}
+  .wordmark .dot{width:8px;height:8px;border-radius:50%;background:var(--pink);}
+  .lang-toggle{display:flex; align-items:center; border:1px solid var(--ink); border-radius:999px; padding:3px; gap:2px;}
+  .lang-toggle button{border:none; background:transparent; padding:6px 14px; border-radius:999px; font:inherit; font-size:0.78rem; font-weight:600; cursor:pointer; color:var(--graphite); font-family:"Inter",sans-serif;}
+  .lang-toggle button.active{background:var(--ink); color:#fff;}
+
+  .topbar-right{display:flex; align-items:center; gap:10px;}
+  .admin-link{
+    display:flex; align-items:center; gap:6px; border:1px solid var(--line); background:#fff;
+    padding:8px 14px; border-radius:999px; font-size:0.78rem; font-weight:600; color:var(--graphite);
+    cursor:pointer; font-family:inherit;
+  }
+  .admin-link:hover{border-color:var(--ink); color:var(--ink);}
+  .admin-link svg{width:14px; height:14px; flex:none;}
+  .admin-badge{
+    display:inline-flex; align-items:center; gap:6px; background:var(--ink); color:#fff;
+    padding:8px 14px; border-radius:999px; font-size:0.78rem; font-weight:600; cursor:pointer; border:none; font-family:inherit;
+  }
+  .admin-badge svg{width:14px; height:14px; color:var(--pink);}
+
+  /* ===== admin modal ===== */
+  .modal-overlay{
+    position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(23,19,28,0.55); backdrop-filter:blur(3px);
+    display:none; align-items:center; justify-content:center; z-index:100; padding:20px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-card{
+    background:#fff; border-radius:22px; padding:32px; width:100%; max-width:360px;
+    box-shadow:0 30px 70px -20px rgba(23,19,28,0.4);
+  }
+  .modal-card h3{margin:0 0 8px; font-size:1.2rem;}
+  .modal-card p{margin:0 0 20px; color:var(--graphite); font-size:0.88rem; line-height:1.5;}
+  .modal-card input{
+    width:100%; border:1px solid var(--line); border-radius:12px; padding:12px 14px; font-size:0.94rem;
+    font-family:inherit; background:var(--paper); color:var(--ink); margin-bottom:10px;
+  }
+  .modal-card input:focus{outline:2px solid var(--pink); outline-offset:1px;}
+  .modal-error{color:#c0154a; font-size:0.8rem; margin:-2px 0 12px; display:none;}
+  .modal-error.show{display:block;}
+  .modal-actions{display:flex; gap:10px; margin-top:6px;}
+  .modal-actions .btn{padding:12px;}
+
+  /* ===== admin dashboard ===== */
+  .admin-wrap{width:100%; max-width:760px; padding:34px 20px 80px; display:none;}
+  .admin-wrap.open{display:block;}
+  .admin-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;}
+  .admin-head h1{font-size:1.7rem; margin:0;}
+  .admin-note{color:var(--graphite); font-size:0.88rem; margin:0 0 30px; line-height:1.5;}
+  .admin-section{
+    background:#fff; border:1px solid var(--line); border-radius:20px; padding:26px; margin-bottom:22px;
+  }
+  .admin-section h2{font-size:1.05rem; margin:0 0 4px;}
+  .admin-section .sec-sub{color:var(--graphite); font-size:0.82rem; margin:0 0 20px;}
+  .admin-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media (max-width:560px){ .admin-grid{grid-template-columns:1fr;} }
+  .admin-field label{display:block; font-size:0.74rem; font-weight:700; color:var(--graphite); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.03em;}
+  .admin-field input{
+    width:100%; border:1px solid var(--line); border-radius:10px; padding:10px 12px; font-size:0.92rem;
+    font-family:inherit; background:var(--paper); color:var(--ink);
+  }
+  .admin-field input:focus{outline:2px solid var(--pink); outline-offset:1px;}
+  .admin-field .hint{font-size:0.72rem; color:var(--graphite); margin-top:4px;}
+
+  .driver-row{display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--line);}
+  .driver-row:last-child{border-bottom:none;}
+  .driver-row .d-init{width:32px; height:32px; border-radius:50%; background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.82rem; font-weight:700; flex:none;}
+  .driver-row .d-name{font-weight:600; font-size:0.9rem; flex:1;}
+  .driver-row .d-remove{
+    border:1px solid var(--line); background:#fff; width:28px; height:28px; border-radius:50%; cursor:pointer;
+    color:var(--graphite); font-size:0.9rem; line-height:1; flex:none;
+  }
+  .driver-row .d-remove:hover{border-color:#c0154a; color:#c0154a;}
+  .driver-add{display:flex; gap:10px; margin-top:14px;}
+  .driver-add input{flex:1;}
+
+  .admin-actions{display:flex; gap:12px; align-items:center; flex-wrap:wrap;}
+  .admin-actions .btn{width:auto; padding:13px 22px;}
+  .save-toast{font-size:0.82rem; color:var(--green); font-weight:600; opacity:0; transition:opacity .2s;}
+  .save-toast.show{opacity:1;}
+
+  .intro{max-width:640px; text-align:center; padding:38px 24px 8px;}
+  .intro .kicker{font-size:0.78rem; font-weight:700; color:var(--pink-deep); letter-spacing:0.02em; margin-bottom:10px;}
+  .intro h1{font-size:clamp(1.6rem,3vw,2.1rem); margin:0 0 10px; line-height:1.2;}
+  .intro p{color:var(--graphite); font-size:0.98rem; line-height:1.5; margin:0;}
+  html.fa .intro p{line-height:1.85;}
+
+  /* ===== phone shell ===== */
+  .stage{width:100%; display:flex; justify-content:center; padding:34px 20px 70px;}
+  .phone{
+    width:380px; max-width:100%; height:730px;
+    background:#fff; border-radius:40px; border:1px solid var(--line);
+    box-shadow: 0 40px 80px -30px rgba(23,19,28,0.35), 0 2px 0 rgba(255,255,255,0.6) inset;
+    position:relative; overflow:hidden;
+    display:flex; flex-direction:column;
+  }
+  .notch{
+    position:absolute; top:0; left:50%; transform:translateX(-50%);
+    width:120px; height:24px; background:var(--ink); border-radius:0 0 16px 16px; z-index:20;
+  }
+  .statusbar{
+    padding:16px 26px 6px; display:flex; justify-content:space-between; font-size:0.72rem; font-weight:600; color:var(--ink); flex:none;
+  }
+  .app-body{flex:1; position:relative; overflow:hidden;}
+  .screen{
+    position:absolute; top:0; left:0; right:0; bottom:0; padding:14px 22px 22px; overflow-y:auto;
+    display:flex; flex-direction:column;
+    opacity:0; transform:translateY(10px); pointer-events:none; transition:opacity .28s ease, transform .28s ease;
+  }
+  .screen.active{opacity:1; transform:translateY(0); pointer-events:auto;}
+  .screen::-webkit-scrollbar{display:none;}
+
+  .screen-head{display:flex; align-items:center; gap:12px; margin-bottom:18px; flex:none;}
+  .icon-btn{
+    width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:#fff;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none; color:var(--ink);
+  }
+  .screen-title{font-family:"Fraunces",serif; font-size:1.15rem; font-weight:500;}
+  html.fa .screen-title{font-family:"Vazirmatn",sans-serif; font-weight:700;}
+
+  /* ===== home screen ===== */
+  .segmented{display:flex; background:var(--pink-soft-2); border-radius:999px; padding:4px; margin-bottom:20px; flex:none;}
+  .segmented button{
+    flex:1; border:none; background:transparent; padding:10px 8px; border-radius:999px;
+    font-size:0.82rem; font-weight:600; color:var(--graphite); cursor:pointer; font-family:inherit;
+  }
+  .segmented button.active{background:var(--ink); color:#fff;}
+
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:0.74rem; font-weight:700; color:var(--graphite); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.03em;}
+  html.fa .field label{text-transform:none;}
+  .field input, .field select{
+    width:100%; border:1px solid var(--line); border-radius:12px; padding:12px 14px; font-size:0.94rem;
+    font-family:inherit; background:var(--paper); color:var(--ink);
+  }
+  .field input:focus, .field select:focus{outline:2px solid var(--pink); outline-offset:1px;}
+
+  .stop-row{position:relative;}
+  .stop-dot{position:absolute; inset-inline-start:14px; top:16px; width:8px; height:8px; border-radius:50%; background:var(--pink); z-index:2;}
+  .stop-dot.sq{border-radius:2px; background:var(--ink);}
+  .stop-line{position:absolute; inset-inline-start:17px; top:36px; width:1px; height:26px; background:var(--line);}
+  .field.stop input{padding-inline-start:34px;}
+
+  .chip-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;}
+  .chip{
+    border:1px solid var(--line); background:#fff; border-radius:999px; padding:8px 14px; font-size:0.8rem;
+    cursor:pointer; color:var(--graphite); font-family:inherit;
+  }
+  .chip:hover{border-color:var(--pink);}
+
+  .stepper{display:flex; align-items:center; justify-content:space-between; border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin-bottom:18px;}
+  .stepper .val{font-family:"Fraunces",serif; font-size:1.4rem;}
+  html.fa .stepper .val{font-family:"Inter",sans-serif; font-weight:700;}
+  .stepper button{
+    width:34px; height:34px; border-radius:50%; border:1px solid var(--ink); background:#fff; font-size:1.1rem;
+    cursor:pointer; color:var(--ink); font-family:inherit;
+  }
+
+  .fleet-card{
+    display:flex; align-items:center; gap:12px; border:1px solid var(--line); border-radius:16px; padding:14px; margin-bottom:20px; background:linear-gradient(135deg,#fff, var(--pink-soft-2));
+  }
+  .fleet-card svg{width:56px; height:auto; flex:none;}
+  .fleet-card .ft{font-weight:700; font-size:0.92rem;}
+  .fleet-card .fs{font-size:0.78rem; color:var(--graphite);}
+
+  .spacer{flex:1;}
+
+  .btn{
+    display:flex; align-items:center; justify-content:center; gap:8px; width:100%;
+    padding:15px; border-radius:14px; font-weight:700; font-size:0.95rem; border:none; cursor:pointer; font-family:inherit;
+  }
+  .btn-primary{background:var(--ink); color:#fff;}
+  .btn-primary:disabled{background:#cfc9d3; cursor:not-allowed;}
+  .btn-secondary{background:var(--pink-soft-2); color:var(--pink-deep); border:1px solid var(--pink-soft);}
+
+  /* ===== price screen ===== */
+  .price-card{border:1px solid var(--line); border-radius:18px; padding:20px; margin-bottom:16px;}
+  .price-row{display:flex; justify-content:space-between; font-size:0.88rem; padding:8px 0; color:var(--graphite);}
+  .price-row.total{border-top:1px solid var(--line); margin-top:6px; padding-top:14px; font-weight:800; color:var(--ink); font-size:1.05rem;}
+  .route-mini{display:flex; flex-direction:column; gap:2px; margin-bottom:18px;}
+  .route-mini .r{display:flex; gap:10px; align-items:center; font-size:0.86rem; padding:6px 0;}
+  .route-mini .rd{width:7px; height:7px; border-radius:50%; background:var(--pink); flex:none;}
+  .route-mini .rd.sq{border-radius:2px; background:var(--ink);}
+  .route-mini .rl{flex:none; width:1px; height:16px; background:var(--line); margin-inline-start:3px;}
+
+  .pay-methods{display:flex; flex-direction:column; gap:10px; margin-bottom:20px;}
+  .pay-method{
+    display:flex; align-items:center; gap:12px; border:1.5px solid var(--line); border-radius:14px; padding:14px; cursor:pointer;
+  }
+  .pay-method.selected{border-color:var(--pink); background:var(--pink-soft-2);}
+  .pay-method .pm-name{font-weight:700; font-size:0.9rem;}
+  .pay-method .pm-sub{font-size:0.76rem; color:var(--graphite);}
+  .pay-method .radio{width:18px; height:18px; border-radius:50%; border:1.5px solid var(--graphite); flex:none; margin-inline-start:auto; position:relative;}
+  .pay-method.selected .radio{border-color:var(--pink);}
+  .pay-method.selected .radio::after{content:''; position:absolute; inset:3px; border-radius:50%; background:var(--pink);}
+
+  /* ===== matching ===== */
+  .matching-wrap{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:22px;}
+  .pulse-ring{position:relative; width:120px; height:120px; display:flex; align-items:center; justify-content:center;}
+  .pulse-ring::before, .pulse-ring::after{
+    content:''; position:absolute; top:0; left:0; right:0; bottom:0; border-radius:50%; border:1.5px solid var(--pink); opacity:0.5;
+    animation: pulse 1.8s ease-out infinite;
+  }
+  .pulse-ring::after{animation-delay:.9s;}
+  @keyframes pulse{ from{transform:scale(0.6); opacity:0.6;} to{transform:scale(1.5); opacity:0;} }
+  .pulse-core{width:64px; height:64px; border-radius:50%; background:var(--ink); display:flex; align-items:center; justify-content:center; color:var(--pink);}
+  .matching-title{font-family:"Fraunces",serif; font-size:1.2rem;}
+  html.fa .matching-title{font-family:"Vazirmatn",sans-serif; font-weight:700;}
+  .matching-sub{color:var(--graphite); font-size:0.88rem;}
+
+  /* ===== driver / ride ===== */
+  .driver-card{display:flex; align-items:center; gap:14px; border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:18px;}
+  .avatar{width:52px; height:52px; border-radius:50%; background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center; font-family:"Fraunces",serif; font-size:1.1rem; flex:none;}
+  html.fa .avatar{font-family:"Vazirmatn",sans-serif;}
+  .driver-name{font-weight:700; font-size:0.98rem;}
+  .driver-meta{font-size:0.78rem; color:var(--graphite); margin-top:2px;}
+  .plate-tag{margin-inline-start:auto; background:var(--ink); color:#fff; font-size:0.72rem; font-weight:700; padding:6px 10px; border-radius:8px; letter-spacing:0.03em;}
+
+  .map-mock{
+    position:relative; height:220px; border-radius:16px; margin-bottom:18px; overflow:hidden;
+    background:
+      linear-gradient(0deg, transparent 24%, rgba(23,19,28,0.06) 25%, rgba(23,19,28,0.06) 26%, transparent 27%, transparent 74%, rgba(23,19,28,0.06) 75%, rgba(23,19,28,0.06) 76%, transparent 77%, transparent),
+      linear-gradient(90deg, transparent 24%, rgba(23,19,28,0.06) 25%, rgba(23,19,28,0.06) 26%, transparent 27%, transparent 74%, rgba(23,19,28,0.06) 75%, rgba(23,19,28,0.06) 76%, transparent 77%, transparent),
+      var(--pink-soft-2);
+    background-size: 40px 40px;
+  }
+  .route-path{position:absolute; left:14%; right:14%; top:50%; height:2px; background:repeating-linear-gradient(90deg, var(--ink) 0 6px, transparent 6px 12px); transform:translateY(-50%);}
+  .route-endpoint{position:absolute; top:50%; width:10px; height:10px; border-radius:50%; background:var(--ink); transform:translate(-50%,-50%);}
+  .route-endpoint.end{background:var(--pink);}
+  .car-marker{
+    position:absolute; top:50%; transform:translate(-50%,-50%); width:30px; height:30px; border-radius:50%;
+    background:var(--pink); display:flex; align-items:center; justify-content:center; color:#fff;
+    box-shadow:0 6px 14px rgba(240,21,122,0.5); transition: left 4.6s linear;
+  }
+  .progress-track{height:5px; border-radius:99px; background:var(--line); margin-bottom:6px; overflow:hidden;}
+  .progress-fill{height:100%; background:var(--pink); width:0%; transition:width 4.6s linear;}
+  .eta-row{display:flex; justify-content:space-between; font-size:0.8rem; color:var(--graphite); margin-bottom:18px;}
+
+  /* ===== receipt ===== */
+  .receipt-badge{
+    width:64px; height:64px; border-radius:50%; background:var(--pink-soft-2); color:var(--pink-deep);
+    display:flex; align-items:center; justify-content:center; margin:0 auto 18px;
+  }
+  .receipt-title{text-align:center; font-size:1.25rem; margin-bottom:6px;}
+  .receipt-sub{text-align:center; color:var(--graphite); font-size:0.86rem; margin-bottom:22px;}
+  .stars{display:flex; justify-content:center; gap:8px; margin-bottom:24px;}
+  .star{width:30px; height:30px; cursor:pointer; color:var(--line); transition:color .15s;}
+  .star.filled{color:var(--pink);}
+
+  .foot-note{
+    text-align:center; margin-top:26px; font-size:0.78rem; color:var(--graphite); max-width:340px; line-height:1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wordmark"><span class="dot"></span>Herway</div>
+  <div class="topbar-right">
+    <button class="admin-link" id="adminOpenBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      <span class="en">Admin</span><span class="fa">مدیریت</span>
+    </button>
+    <div class="lang-toggle" id="langToggle">
+      <button data-lang="en" class="active">EN</button>
+      <button data-lang="fa">فا</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN MODAL -->
+<div class="modal-overlay" id="adminModal">
+  <div class="modal-card">
+    <h3><span class="en">Admin sign-in</span><span class="fa">ورود مدیر</span></h3>
+    <p><span class="en">Enter the admin password to edit pricing, fleet, and drivers.</span><span class="fa">برای ویرایش قیمت، ناوگان و رانندگان، رمز عبور مدیر را وارد کنید.</span></p>
+    <input type="password" id="adminPasswordInput" placeholder="Password" autocomplete="off">
+    <div class="modal-error" id="adminError"><span class="en">Incorrect password.</span><span class="fa">رمز عبور اشتباه است.</span></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="adminCancelBtn" style="border:1px solid var(--line);"><span class="en">Cancel</span><span class="fa">لغو</span></button>
+      <button class="btn btn-primary" id="adminSubmitBtn"><span class="en">Sign in</span><span class="fa">ورود</span></button>
+    </div>
+  </div>
+</div>
+
+<div id="riderView">
+<div class="intro">
+  <div class="kicker"><span class="en">WORKING PROTOTYPE</span><span class="fa">نمونه اولیه فعال</span></div>
+  <h1><span class="en">Book a Herway ride, right here.</span><span class="fa">همین‌جا یک سفر Herway رزرو کنید.</span></h1>
+  <p><span class="en">This runs the actual booking flow from the concept — request, price, pay, match, ride — using a simulated pink fleet and simulated chauffeurs.</span><span class="fa">این نسخه، مسیر واقعی رزرو در ایده را اجرا می‌کند — درخواست، قیمت، پرداخت، تطبیق، سفر — با ناوگان و راننده‌های شبیه‌سازی‌شده.</span></p>
+</div>
+
+<div class="stage">
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="statusbar">
+      <span id="clock">9:41</span>
+      <span>Herway</span>
+    </div>
+
+    <div class="app-body">
+
+      <!-- SCREEN: HOME -->
+      <div class="screen active" data-screen="home">
+        <div class="screen-head">
+          <div class="screen-title"><span class="en">Where to?</span><span class="fa">مقصد شما کجاست؟</span></div>
+        </div>
+
+        <div class="segmented" id="modeToggle" role="tablist">
+          <button class="active" data-mode="ondemand"><span class="en">Book now</span><span class="fa">رزرو فوری</span></button>
+          <button data-mode="hourly"><span class="en">Schedule a drive</span><span class="fa">زمان‌بندی سفر</span></button>
+        </div>
+
+        <!-- on demand (book now) fields -->
+        <div id="ondemandFields">
+          <div class="stepper" style="margin-bottom:14px;">
+            <div>
+              <div style="font-size:0.78rem; color:var(--graphite); font-weight:600;"><span class="en">How long do you need it?</span><span class="fa">به چه مدت زمانی نیاز دارید؟</span></div>
+              <div class="val"><span id="bnHoursVal">2</span> <span class="en">hours</span><span class="fa">ساعت</span></div>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button id="bnHoursMinus" type="button">−</button>
+              <button id="bnHoursPlus" type="button">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label><span class="en">Time of day</span><span class="fa">زمان روز</span></label>
+            <input class="stop" id="bnTimeInput" type="time">
+          </div>
+          <div class="field stop-row">
+            <div class="stop-dot"></div>
+            <label><span class="en">Location</span><span class="fa">مکان</span></label>
+            <input class="stop" id="bnLocationInput" type="text" placeholder="Where do you need the driver?">
+          </div>
+          <div class="chip-row">
+            <button class="chip" data-fill-bn="Downtown"><span class="en">Downtown</span><span class="fa">مرکز شهر</span></button>
+            <button class="chip" data-fill-bn="Airport"><span class="en">Airport</span><span class="fa">فرودگاه</span></button>
+            <button class="chip" data-fill-bn="Uptown Hotel"><span class="en">Uptown Hotel</span><span class="fa">هتل بالای شهر</span></button>
+          </div>
+          <div style="font-size:0.78rem; color:var(--pink-deep); font-weight:600; margin-bottom:6px;" id="bnRateNote">
+            <span class="en">$100/hr · rate caps at 10 hours</span><span class="fa">۱۰۰ دلار در ساعت · سقف نرخ در ۱۰ ساعت</span>
+          </div>
+        </div>
+
+        <!-- hourly fields -->
+        <div id="hourlyFields" style="display:none;">
+          <div class="segmented" style="margin-bottom:14px;" id="schedTypeToggle">
+            <button class="active" data-schedtype="hourly"><span class="en">By the hour</span><span class="fa">ساعتی</span></button>
+            <button data-schedtype="daily"><span class="en">Full day</span><span class="fa">تمام روز</span></button>
+          </div>
+
+          <div id="schedHourlyOnly">
+            <div class="stepper" style="margin-bottom:14px;">
+              <div>
+                <div style="font-size:0.78rem; color:var(--graphite); font-weight:600;"><span class="en">How long do you need it?</span><span class="fa">به چه مدت زمانی نیاز دارید؟</span></div>
+                <div class="val"><span id="hoursVal">3</span> <span class="en">hours</span><span class="fa">ساعت</span></div>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button id="hoursMinus" type="button">−</button>
+                <button id="hoursPlus" type="button">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="schedDailyOnly" style="display:none;">
+            <div class="fleet-card" style="margin-bottom:14px; background:linear-gradient(135deg,#fff, var(--pink-soft-2));">
+              <div style="width:44px;height:44px;border-radius:50%;background:var(--ink);color:var(--pink);display:flex;align-items:center;justify-content:center;flex:none;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+              </div>
+              <div>
+                <div class="ft"><span class="en">Full-day charter</span><span class="fa">چارتر تمام روز</span></div>
+                <div class="fs"><span class="en">One driver, one car, all day</span><span class="fa">یک راننده، یک خودرو، تمام روز</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label><span class="en">Date</span><span class="fa">تاریخ</span></label>
+            <input class="stop" id="schedDateInput" type="date">
+          </div>
+          <div class="field">
+            <label><span class="en">Time of day</span><span class="fa">زمان روز</span></label>
+            <input class="stop" id="schedTimeInput" type="time">
+          </div>
+          <div class="field stop-row">
+            <div class="stop-dot"></div>
+            <label><span class="en">Location</span><span class="fa">مکان</span></label>
+            <input class="stop" id="hourlyPickupInput" type="text" placeholder="Where should your chauffeur start?">
+          </div>
+          <div class="chip-row">
+            <button class="chip" data-fill-sched="Downtown"><span class="en">Downtown</span><span class="fa">مرکز شهر</span></button>
+            <button class="chip" data-fill-sched="Airport"><span class="en">Airport</span><span class="fa">فرودگاه</span></button>
+            <button class="chip" data-fill-sched="Uptown Hotel"><span class="en">Uptown Hotel</span><span class="fa">هتل بالای شهر</span></button>
+          </div>
+          <div id="schedRateNote" style="font-size:0.78rem; color:var(--pink-deep); font-weight:600; margin-bottom:6px;">
+            <span class="en">$100/hr · rate caps at 10 hours</span><span class="fa">۱۰۰ دلار در ساعت · سقف نرخ در ۱۰ ساعت</span>
+          </div>
+        </div>
+
+        <div class="fleet-card">
+          <svg viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 40 C 9 30, 22 27, 34 26 L 42 18 C 46 14, 53 12, 61 12 L 76 12 C 82 12, 87 14, 91 18 L 99 26 C 108 27, 114 31, 116 40 L 116 44 C 116 46, 114 47, 112 47 L 103 47 C 103 41, 98 37, 92 37 C 86 37, 81 41, 81 47 L 42 47 C 42 41, 37 37, 31 37 C 25 37, 20 41, 20 47 L 10 47 C 8 47, 6 46, 6 44 Z" fill="#f0157a"/>
+            <circle cx="31" cy="47" r="7" fill="#17131c"/>
+            <circle cx="92" cy="47" r="7" fill="#17131c"/>
+          </svg>
+          <div>
+            <div class="ft"><span class="en" id="fleetNameEn">Pink Fleet Sedan</span><span class="fa" id="fleetNameFa">سدان ناوگان صورتی</span></div>
+            <div class="fs"><span class="en" id="fleetSeatsEn">4 seats · white Herway wordmark</span><span class="fa" id="fleetSeatsFa">۴ صندلی · لوگوی سفید Herway</span></div>
+          </div>
+        </div>
+
+        <div class="spacer"></div>
+        <button class="btn btn-primary" id="toPriceBtn"><span class="en">See price</span><span class="fa">مشاهده قیمت</span></button>
+      </div>
+
+      <!-- SCREEN: PRICE -->
+      <div class="screen" data-screen="price">
+        <div class="screen-head">
+          <button class="icon-btn" data-back="home">←</button>
+          <div class="screen-title"><span class="en">Confirm your trip</span><span class="fa">تایید سفر</span></div>
+        </div>
+
+        <div class="route-mini" id="routeMini"></div>
+
+        <div class="price-card">
+          <div class="price-row"><span><span class="en">Base fare</span><span class="fa">کرایه پایه</span></span><span id="priceBase">$0</span></div>
+          <div class="price-row" id="priceDistRow"><span><span class="en">Booked for</span><span class="fa">مدت رزرو</span></span><span id="priceDist">—</span></div>
+          <div class="price-row" id="priceDiscountRow" style="display:none; color:var(--green);"><span><span class="en">Multi-hour discount</span><span class="fa">تخفیف چند ساعته</span></span><span id="priceDiscount">−$0</span></div>
+          <div class="price-row"><span><span class="en">Service fee</span><span class="fa">هزینه خدمات</span></span><span id="priceFee">$0</span></div>
+          <div class="price-row total"><span><span class="en">Total</span><span class="fa">مجموع</span></span><span id="priceTotal">$0</span></div>
+        </div>
+
+        <div class="spacer"></div>
+        <button class="btn btn-primary" id="toPayBtn"><span class="en">Confirm & pay</span><span class="fa">تایید و پرداخت</span></button>
+      </div>
+
+      <!-- SCREEN: PAY -->
+      <div class="screen" data-screen="pay">
+        <div class="screen-head">
+          <button class="icon-btn" data-back="price">←</button>
+          <div class="screen-title"><span class="en">Pay in-app</span><span class="fa">پرداخت داخل اپ</span></div>
+        </div>
+
+        <div class="pay-methods">
+          <div class="pay-method selected" data-pay="card">
+            <div style="width:34px;height:24px;border-radius:5px;background:var(--ink);"></div>
+            <div>
+              <div class="pm-name"><span class="en">Card •••• 4471</span><span class="fa">کارت •••• ۴۴۷۱</span></div>
+              <div class="pm-sub"><span class="en">Visa, ends 4471</span><span class="fa">ویزا</span></div>
+            </div>
+            <div class="radio"></div>
+          </div>
+          <div class="pay-method" data-pay="apple">
+            <div style="width:34px;height:24px;border-radius:5px;background:#fff; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:0.6rem; font-weight:800;"></div>
+            <div>
+              <div class="pm-name">Apple Pay</div>
+              <div class="pm-sub"><span class="en">Face ID to confirm</span><span class="fa">تایید با Face ID</span></div>
+            </div>
+            <div class="radio"></div>
+          </div>
+        </div>
+
+        <div class="price-card">
+          <div class="price-row total"><span><span class="en">Amount</span><span class="fa">مبلغ</span></span><span id="payAmount">$0</span></div>
+        </div>
+
+        <div class="spacer"></div>
+        <button class="btn btn-primary" id="payBtn"><span class="en">Pay now</span><span class="fa">پرداخت</span></button>
+      </div>
+
+      <!-- SCREEN: MATCHING -->
+      <div class="screen" data-screen="matching">
+        <div class="matching-wrap">
+          <div class="pulse-ring">
+            <div class="pulse-core">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2A2 2 0 0 1 19.5 8L21 13v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><circle cx="7" cy="16" r="1.4"/><circle cx="17" cy="16" r="1.4"/></svg>
+            </div>
+          </div>
+          <div class="matching-title"><span class="en">Finding your chauffeur…</span><span class="fa">در حال یافتن راننده…</span></div>
+          <div class="matching-sub"><span class="en">Matching you with the nearest pink fleet car</span><span class="fa">اتصال به نزدیک‌ترین خودروی ناوگان صورتی</span></div>
+        </div>
+      </div>
+
+      <!-- SCREEN: DRIVER -->
+      <div class="screen" data-screen="driver">
+        <div class="screen-head">
+          <div class="screen-title"><span class="en">Driver matched</span><span class="fa">راننده مشخص شد</span></div>
+        </div>
+
+        <div class="driver-card">
+          <div class="avatar" id="driverInitial">A</div>
+          <div>
+            <div class="driver-name" id="driverName">—</div>
+            <div class="driver-meta" id="driverMeta">—</div>
+          </div>
+          <div class="plate-tag" id="driverPlate">—</div>
+        </div>
+
+        <div class="map-mock">
+          <div class="route-path"></div>
+          <div class="route-endpoint" id="epStart" style="left:16%;"></div>
+          <div class="route-endpoint end" id="epEnd" style="left:84%;"></div>
+          <div class="car-marker" id="carMarkerDriver" style="left:16%;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2A2 2 0 0 1 19.5 8L21 13v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/></svg>
+          </div>
+        </div>
+
+        <div class="eta-row">
+          <span><span class="en">Arriving in</span><span class="fa">زمان رسیدن</span> <strong id="etaMinutes">4</strong> <span class="en">min</span><span class="fa">دقیقه</span></span>
+          <span id="driverRating">★ 4.9</span>
+        </div>
+
+        <div class="spacer"></div>
+        <button class="btn btn-primary" id="startRideBtn"><span class="en">Start ride</span><span class="fa">شروع سفر</span></button>
+      </div>
+
+      <!-- SCREEN: RIDE -->
+      <div class="screen" data-screen="ride">
+        <div class="screen-head">
+          <div class="screen-title"><span class="en">On the way</span><span class="fa">در مسیر</span></div>
+        </div>
+
+        <div class="map-mock">
+          <div class="route-path"></div>
+          <div class="route-endpoint" style="left:12%;"></div>
+          <div class="route-endpoint end" style="left:88%;"></div>
+          <div class="car-marker" id="carMarkerRide" style="left:12%;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2A2 2 0 0 1 19.5 8L21 13v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/></svg>
+          </div>
+        </div>
+
+        <div class="progress-track"><div class="progress-fill" id="rideProgress"></div></div>
+        <div class="eta-row">
+          <span id="rideStatus"><span class="en">Heading to drop-off</span><span class="fa">در مسیر مقصد</span></span>
+          <span id="rideEta">—</span>
+        </div>
+
+        <div class="spacer"></div>
+        <div class="foot-note"><span class="en">Simulated ride in progress — this ends automatically.</span><span class="fa">سفر شبیه‌سازی‌شده در حال انجام — به‌صورت خودکار پایان می‌یابد.</span></div>
+      </div>
+
+      <!-- SCREEN: RECEIPT -->
+      <div class="screen" data-screen="receipt">
+        <div class="screen-head" style="justify-content:center;">
+          <div class="screen-title"><span class="en">Trip complete</span><span class="fa">سفر پایان یافت</span></div>
+        </div>
+
+        <div class="receipt-badge">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12.5l5 5L20 6.5"/></svg>
+        </div>
+        <div class="receipt-title serif"><span id="receiptTotal">$0</span></div>
+        <div class="receipt-sub" id="receiptMeta"><span class="en">Paid via card</span><span class="fa">پرداخت با کارت</span></div>
+
+        <div class="price-card">
+          <div class="price-row"><span><span class="en">Driver</span><span class="fa">راننده</span></span><span id="receiptDriver">—</span></div>
+          <div class="price-row"><span><span class="en">Location</span><span class="fa">مکان</span></span><span id="receiptDist">—</span></div>
+          <div class="price-row"><span><span class="en">Duration</span><span class="fa">مدت زمان</span></span><span id="receiptDur">—</span></div>
+        </div>
+
+        <div style="text-align:center; font-size:0.85rem; color:var(--graphite); margin-bottom:10px;">
+          <span class="en">Rate your chauffeur</span><span class="fa">به راننده امتیاز دهید</span>
+        </div>
+        <div class="stars" id="starsRow">
+          <svg class="star" data-v="1" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01z"/></svg>
+          <svg class="star" data-v="2" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01z"/></svg>
+          <svg class="star" data-v="3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01z"/></svg>
+          <svg class="star" data-v="4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01z"/></svg>
+          <svg class="star" data-v="5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01z"/></svg>
+        </div>
+
+        <div class="spacer"></div>
+        <button class="btn btn-primary" id="doneBtn"><span class="en">Book another ride</span><span class="fa">رزرو سفر دیگر</span></button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="foot-note" style="margin-bottom:40px;">
+  <span class="en">Prices, drivers, and locations here are simulated for demo purposes and reset on reload.</span>
+  <span class="fa">قیمت‌ها، رانندگان و موقعیت‌ها در این نسخه شبیه‌سازی‌شده و صرفاً برای نمایش هستند.</span>
+</div>
+</div><!-- /riderView -->
+
+<!-- ADMIN DASHBOARD -->
+<div class="admin-wrap" id="adminView">
+  <div class="admin-head">
+    <h1><span class="en">Admin</span><span class="fa">پنل مدیریت</span></h1>
+    <button class="admin-badge" id="adminLogoutBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+      <span class="en">Back to app</span><span class="fa">بازگشت به اپ</span>
+    </button>
+  </div>
+  <p class="admin-note">
+    <span class="en">Changes here update pricing, fleet, and drivers for this browser session only — this is a front-end prototype with no backend, so nothing is saved permanently and there's no real access control behind the password.</span>
+    <span class="fa">تغییرات اینجا فقط برای همین نشست مرورگر اعمال می‌شوند — این یک نمونه اولیه بدون بک‌اند است، پس چیزی به‌صورت دائمی ذخیره نمی‌شود.</span>
+  </p>
+
+  <div class="admin-section">
+    <h2><span class="en">Pricing</span><span class="fa">قیمت‌گذاری</span></h2>
+    <p class="sec-sub"><span class="en">Controls both Book now and the hourly side of Schedule a drive.</span><span class="fa">هم روی «رزرو فوری» و هم بخش ساعتی «زمان‌بندی سفر» اثر می‌گذارد.</span></p>
+    <div class="admin-grid">
+      <div class="admin-field">
+        <label><span class="en">Hourly rate ($)</span><span class="fa">نرخ ساعتی ($)</span></label>
+        <input type="number" id="setHourlyRate" min="1" step="1">
+      </div>
+      <div class="admin-field">
+        <label><span class="en">Full-day rate (CAD)</span><span class="fa">نرخ تمام روز (CAD)</span></label>
+        <input type="number" id="setDailyRate" min="1" step="1">
+      </div>
+      <div class="admin-field">
+        <label><span class="en">Rate cap (hours)</span><span class="fa">سقف نرخ (ساعت)</span></label>
+        <input type="number" id="setRateCapHours" min="1" step="1">
+        <div class="hint"><span class="en">Bookings at or above this many hours all cost the same.</span><span class="fa">رزروهایی با این تعداد ساعت یا بیشتر، هزینه یکسانی دارند.</span></div>
+      </div>
+      <div class="admin-field">
+        <label><span class="en">Max bookable hours</span><span class="fa">حداکثر ساعت قابل رزرو</span></label>
+        <input type="number" id="setMaxHours" min="1" step="1">
+      </div>
+      <div class="admin-field">
+        <label><span class="en">Discount per hour (%)</span><span class="fa">تخفیف به ازای هر ساعت (٪)</span></label>
+        <input type="number" id="setDiscountStep" min="0" step="0.5">
+      </div>
+      <div class="admin-field">
+        <label><span class="en">Max discount (%)</span><span class="fa">حداکثر تخفیف (٪)</span></label>
+        <input type="number" id="setMaxDiscount" min="0" max="100" step="1">
+      </div>
+      <div class="admin-field">
+        <label><span class="en">Service fee ($)</span><span class="fa">هزینه خدمات ($)</span></label>
+        <input type="number" id="setServiceFee" min="0" step="0.5">
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-section">
+    <h2><span class="en">Fleet</span><span class="fa">ناوگان</span></h2>
+    <p class="sec-sub"><span class="en">Shown on the booking screen.</span><span class="fa">در صفحه رزرو نمایش داده می‌شود.</span></p>
+    <div class="admin-grid">
+      <div class="admin-field">
+        <label><span class="en">Vehicle name</span><span class="fa">نام خودرو</span></label>
+        <input type="text" id="setFleetName">
+      </div>
+      <div class="admin-field">
+        <label><span class="en">Subtitle</span><span class="fa">زیرعنوان</span></label>
+        <input type="text" id="setFleetSeats">
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-section">
+    <h2><span class="en">Drivers</span><span class="fa">رانندگان</span></h2>
+    <p class="sec-sub"><span class="en">The pool riders are matched with after payment.</span><span class="fa">استخری که مسافران پس از پرداخت با آن تطبیق داده می‌شوند.</span></p>
+    <div id="driverList"></div>
+    <div class="driver-add">
+      <input type="text" id="newDriverName" placeholder="Driver name">
+      <button class="btn btn-secondary" id="addDriverBtn" style="width:auto; padding:10px 18px;"><span class="en">Add</span><span class="fa">افزودن</span></button>
+    </div>
+  </div>
+
+  <div class="admin-actions">
+    <button class="btn btn-primary" id="saveSettingsBtn" style="width:auto;"><span class="en">Save changes</span><span class="fa">ذخیره تغییرات</span></button>
+    <button class="btn btn-secondary" id="resetSettingsBtn" style="width:auto;"><span class="en">Reset to defaults</span><span class="fa">بازگشت به پیش‌فرض</span></button>
+    <span class="save-toast" id="saveToast"><span class="en">Saved ✓</span><span class="fa">ذخیره شد ✓</span></span>
+  </div>
+</div>
+
+<script>
+(function(){
+  function pad2(n){ n = Math.floor(n); return (n < 10 ? '0' : '') + n; }
+
+  // ---------- language ----------
+  const langToggle = document.getElementById('langToggle');
+  langToggle.addEventListener('click', (e) => {
+    const btn = e.target.closest('button'); if(!btn) return;
+    const lang = btn.dataset.lang;
+    langToggle.querySelectorAll('button').forEach(b => b.classList.toggle('active', b===btn));
+    if(lang==='fa'){
+      document.documentElement.classList.add('fa');
+      document.documentElement.setAttribute('dir','rtl');
+      document.documentElement.setAttribute('lang','fa');
+    } else {
+      document.documentElement.classList.remove('fa');
+      document.documentElement.setAttribute('dir','ltr');
+      document.documentElement.setAttribute('lang','en');
+    }
+    renderRoute();
+  });
+
+  // ---------- clock ----------
+  function tickClock(){
+    const d = new Date();
+    let h = d.getHours(), m = d.getMinutes();
+    document.getElementById('clock').textContent = (h%12===0?12:h%12) + ':' + pad2(m);
+  }
+  tickClock(); setInterval(tickClock, 30000);
+
+  // ---------- state ----------
+  const state = {
+    mode: 'ondemand',
+    schedType: 'hourly',
+    pickup: '', dropoff: '', time: null, date: null,
+    hours: 3, bnHours: 2,
+    distanceKm: 0, durationMin: 0,
+    grossFare: 0, discountPct: 0, currencySuffix: '',
+    fareBase: 0, fareFee: 3.5, fareTotal: 0,
+    payMethod: 'card',
+    driver: null,
+    isAdmin: false,
+    stack: ['home']
+  };
+
+  // ---------- admin-editable settings ----------
+  const ADMIN_PASSWORD = 'herway2026'; // demo-only gate, not real security — visible to anyone who views source
+  const DEFAULT_SETTINGS = {
+    hourlyRate: 100,
+    dailyRate: 2000,
+    rateCapHours: 10,
+    maxBookableHours: 12,
+    discountStepPct: 4.5,
+    maxDiscountPct: 30,
+    serviceFee: 3.5,
+    fleetName: 'Pink Fleet Sedan',
+    fleetSeats: '4 seats · white Herway wordmark'
+  };
+  const settings = Object.assign({}, DEFAULT_SETTINGS);
+
+  const DEFAULT_DRIVERS = [
+    {en:'Sara M.', fa:'سارا م.', initial:'S'},
+    {en:'Amir K.', fa:'امیر ک.', initial:'A'},
+    {en:'Leila R.', fa:'لیلا ر.', initial:'L'},
+    {en:'Daniel P.', fa:'دنیل پ.', initial:'D'},
+    {en:'Niloofar H.', fa:'نیلوفر ح.', initial:'N'}
+  ];
+  let DRIVERS = DEFAULT_DRIVERS.map(d => Object.assign({}, d));
+
+  // ---------- screens ----------
+  function showScreen(name){
+    document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.dataset.screen===name));
+  }
+  document.querySelectorAll('[data-back]').forEach(b=>{
+    b.addEventListener('click', ()=> showScreen(b.dataset.back));
+  });
+
+  // ---------- home: mode toggle ----------
+  document.querySelectorAll('#modeToggle button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('#modeToggle button').forEach(b=>b.classList.toggle('active', b===btn));
+      state.mode = btn.dataset.mode;
+      document.getElementById('ondemandFields').style.display = state.mode==='ondemand' ? '' : 'none';
+      document.getElementById('hourlyFields').style.display = state.mode==='hourly' ? '' : 'none';
+    });
+  });
+
+  // ---------- schedule a drive: by the hour vs full day ----------
+  document.querySelectorAll('#schedTypeToggle button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('#schedTypeToggle button').forEach(b=>b.classList.toggle('active', b===btn));
+      state.schedType = btn.dataset.schedtype;
+      const isDaily = state.schedType === 'daily';
+      document.getElementById('schedHourlyOnly').style.display = isDaily ? 'none' : '';
+      document.getElementById('schedDailyOnly').style.display = isDaily ? '' : 'none';
+      document.getElementById('schedRateNote').style.display = isDaily ? 'none' : '';
+    });
+  });
+
+  document.querySelectorAll('[data-fill-bn]').forEach(c=>{
+    c.addEventListener('click', ()=>{
+      const isFa = document.documentElement.classList.contains('fa');
+      const label = c.querySelector(isFa ? '.fa' : '.en');
+      document.getElementById('bnLocationInput').value = (label ? label.textContent : c.textContent).trim();
+    });
+  });
+
+  document.querySelectorAll('[data-fill-sched]').forEach(c=>{
+    c.addEventListener('click', ()=>{
+      const isFa = document.documentElement.classList.contains('fa');
+      const label = c.querySelector(isFa ? '.fa' : '.en');
+      document.getElementById('hourlyPickupInput').value = (label ? label.textContent : c.textContent).trim();
+    });
+  });
+
+  // Book now: duration stepper ($100/hr, discount for longer bookings)
+  const bnHoursVal = document.getElementById('bnHoursVal');
+  document.getElementById('bnHoursMinus').addEventListener('click', ()=>{
+    state.bnHours = Math.max(1, state.bnHours-1); bnHoursVal.textContent = state.bnHours;
+  });
+  document.getElementById('bnHoursPlus').addEventListener('click', ()=>{
+    state.bnHours = Math.min(settings.maxBookableHours, state.bnHours+1); bnHoursVal.textContent = state.bnHours;
+  });
+
+  // default the time field to the next half hour
+  (function setDefaultTime(){
+    const d = new Date();
+    d.setMinutes(d.getMinutes() < 30 ? 30 : 60, 0, 0);
+    const hh = pad2(d.getHours());
+    const mm = pad2(d.getMinutes()%60);
+    document.getElementById('bnTimeInput').value = hh + ':' + mm;
+  })();
+
+  // Schedule a drive: same pricing model as Book now, for a future date
+  const hoursVal = document.getElementById('hoursVal');
+  document.getElementById('hoursMinus').addEventListener('click', ()=>{
+    state.hours = Math.max(1, state.hours-1); hoursVal.textContent = state.hours;
+  });
+  document.getElementById('hoursPlus').addEventListener('click', ()=>{
+    state.hours = Math.min(settings.maxBookableHours, state.hours+1); hoursVal.textContent = state.hours;
+  });
+
+  // default the schedule date to tomorrow, and don't allow choosing today or earlier
+  (function setDefaultSchedDate(){
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    const iso = d.toISOString().slice(0,10);
+    const dateInput = document.getElementById('schedDateInput');
+    dateInput.value = iso;
+    dateInput.min = iso;
+    document.getElementById('schedTimeInput').value = '10:00';
+  })();
+
+  function fmt$(n, suffix){ return '$' + n.toFixed(2) + (suffix ? ' ' + suffix : ''); }
+
+  function formatTime(t){
+    if(!t) return '';
+    const [h,m] = t.split(':').map(Number);
+    const period = h >= 12 ? 'PM' : 'AM';
+    const h12 = ((h+11)%12)+1;
+    return h12 + ':' + pad2(m) + ' ' + period;
+  }
+
+  function formatDate(iso, isFa){
+    if(!iso) return '';
+    const d = new Date(iso + 'T00:00:00');
+    const locale = isFa ? 'fa-IR-u-ca-gregory' : 'en-US';
+    return d.toLocaleDateString(locale, { weekday:'short', month:'short', day:'numeric' });
+  }
+
+  // hourly rate drops as booked duration grows, capped at settings.maxDiscountPct;
+  // the rate itself stops climbing past settings.rateCapHours, so 10, 11, and 12
+  // hours (by default) all bill at the same rate — same model for both booking types.
+  function tieredDiscount(hours){
+    const billable = Math.min(hours, settings.rateCapHours);
+    return Math.min(settings.maxDiscountPct/100, (billable-1) * (settings.discountStepPct/100));
+  }
+
+  function computeOnDemand(){
+    const loc = (document.getElementById('bnLocationInput').value || 'Downtown').trim();
+    const time = document.getElementById('bnTimeInput').value;
+    const hours = state.bnHours;
+    const billableHours = Math.min(hours, settings.rateCapHours);
+    const discount = tieredDiscount(hours);
+    const rate = settings.hourlyRate * (1 - discount);
+
+    state.pickup = loc; state.dropoff = null;
+    state.time = time; state.date = null;
+    state.distanceKm = null;
+    state.durationMin = hours * 60;
+    state.discountPct = discount;
+    state.currencySuffix = '';
+    state.grossFare = billableHours * settings.hourlyRate;
+    state.fareBase = billableHours * rate;
+    state.fareFee = settings.serviceFee;
+    state.fareTotal = state.fareBase + state.fareFee;
+  }
+
+  function computeHourly(){
+    const loc = (document.getElementById('hourlyPickupInput').value || 'Downtown').trim();
+    const date = document.getElementById('schedDateInput').value;
+    const time = document.getElementById('schedTimeInput').value;
+
+    state.pickup = loc; state.dropoff = null;
+    state.time = time; state.date = date;
+    state.distanceKm = null;
+
+    if(state.schedType === 'daily'){
+      state.durationMin = null;
+      state.discountPct = 0;
+      state.currencySuffix = 'CAD';
+      state.grossFare = settings.dailyRate;
+      state.fareBase = settings.dailyRate;
+      state.fareFee = settings.serviceFee;
+      state.fareTotal = state.fareBase + state.fareFee;
+    } else {
+      const hours = state.hours;
+      const billableHours = Math.min(hours, settings.rateCapHours);
+      const discount = tieredDiscount(hours);
+      const rate = settings.hourlyRate * (1 - discount);
+
+      state.durationMin = hours * 60;
+      state.discountPct = discount;
+      state.currencySuffix = '';
+      state.grossFare = billableHours * settings.hourlyRate;
+      state.fareBase = billableHours * rate;
+      state.fareFee = settings.serviceFee;
+      state.fareTotal = state.fareBase + state.fareFee;
+    }
+  }
+
+  function renderRoute(){
+    const mini = document.getElementById('routeMini');
+    const isFa = document.documentElement.classList.contains('fa');
+    const hoursLabel = isFa ? 'ساعت' : 'hours';
+    if(state.mode === 'ondemand'){
+      mini.innerHTML = `
+        <div class="r"><span class="rd"></span><span>${escapeHtml(state.pickup)}</span></div>
+        <div class="rl"></div>
+        <div class="r"><span class="rd sq"></span><span>${state.bnHours} ${hoursLabel} · ${formatTime(state.time)}</span></div>`;
+    } else if(state.schedType === 'daily'){
+      const dayLabel = isFa ? 'تمام روز' : 'Full day';
+      mini.innerHTML = `
+        <div class="r"><span class="rd"></span><span>${escapeHtml(state.pickup)}</span></div>
+        <div class="rl"></div>
+        <div class="r"><span class="rd sq"></span><span>${dayLabel} · ${formatDate(state.date, isFa)}, ${formatTime(state.time)}</span></div>`;
+    } else {
+      mini.innerHTML = `
+        <div class="r"><span class="rd"></span><span>${escapeHtml(state.pickup)}</span></div>
+        <div class="rl"></div>
+        <div class="r"><span class="rd sq"></span><span>${state.hours} ${hoursLabel} · ${formatDate(state.date, isFa)}, ${formatTime(state.time)}</span></div>`;
+    }
+  }
+
+  function escapeHtml(s){
+    return (s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  }
+
+  document.getElementById('toPriceBtn').addEventListener('click', ()=>{
+    if(state.mode === 'ondemand'){ computeOnDemand(); } else { computeHourly(); }
+
+    document.getElementById('priceBase').textContent = fmt$(state.grossFare, state.currencySuffix);
+    document.getElementById('priceFee').textContent = fmt$(state.fareFee, state.currencySuffix);
+    document.getElementById('priceTotal').textContent = fmt$(state.fareTotal, state.currencySuffix);
+    document.getElementById('payAmount').textContent = fmt$(state.fareTotal, state.currencySuffix);
+
+    const discountRow = document.getElementById('priceDiscountRow');
+    if(state.discountPct > 0){
+      discountRow.style.display = '';
+      document.getElementById('priceDiscount').textContent = '−' + fmt$(state.grossFare - state.fareBase, state.currencySuffix) + ' (' + Math.round(state.discountPct*100) + '%)';
+    } else {
+      discountRow.style.display = 'none';
+    }
+
+    const distRow = document.getElementById('priceDistRow');
+    const isFa = document.documentElement.classList.contains('fa');
+    distRow.style.display = '';
+    if(state.mode === 'ondemand'){
+      document.getElementById('priceDist').textContent = state.bnHours + (isFa?' ساعت':' hours') + ' · ' + formatTime(state.time);
+    } else if(state.schedType === 'daily'){
+      document.getElementById('priceDist').textContent = (isFa?'تمام روز':'Full day') + ' · ' + formatDate(state.date, isFa) + ', ' + formatTime(state.time);
+    } else {
+      document.getElementById('priceDist').textContent = state.hours + (isFa?' ساعت':' hours') + ' · ' + formatDate(state.date, isFa) + ', ' + formatTime(state.time);
+    }
+
+    renderRoute();
+    showScreen('price');
+  });
+
+  document.getElementById('toPayBtn').addEventListener('click', ()=> showScreen('pay'));
+
+  document.querySelectorAll('.pay-method').forEach(pm=>{
+    pm.addEventListener('click', ()=>{
+      document.querySelectorAll('.pay-method').forEach(x=>x.classList.toggle('selected', x===pm));
+      state.payMethod = pm.dataset.pay;
+    });
+  });
+
+  document.getElementById('payBtn').addEventListener('click', ()=>{
+    showScreen('matching');
+    setTimeout(()=>{
+      const d = DRIVERS[Math.floor(Math.random()*DRIVERS.length)];
+      const plate = 'HRY-' + (100 + Math.floor(Math.random()*900));
+      const eta = 3 + Math.floor(Math.random()*6);
+      const rating = (4.6 + Math.random()*0.35).toFixed(1);
+      state.driver = {d, plate, eta, rating};
+
+      document.getElementById('driverInitial').textContent = d.initial;
+      document.getElementById('driverName').innerHTML = `<span class="en">${d.en}</span><span class="fa">${d.fa}</span>`;
+      document.getElementById('driverMeta').textContent = settings.fleetName;
+      document.getElementById('driverPlate').textContent = plate;
+      document.getElementById('etaMinutes').textContent = eta;
+      document.getElementById('driverRating').textContent = '★ ' + rating;
+
+      showScreen('driver');
+      const marker = document.getElementById('carMarkerDriver');
+      marker.style.left = '16%';
+      requestAnimationFrame(()=>{ setTimeout(()=>{ marker.style.left = '78%'; }, 200); });
+    }, 2400);
+  });
+
+  document.getElementById('startRideBtn').addEventListener('click', ()=>{
+    showScreen('ride');
+    const marker = document.getElementById('carMarkerRide');
+    const fill = document.getElementById('rideProgress');
+    marker.style.left = '12%'; fill.style.width = '0%';
+    requestAnimationFrame(()=>{
+      setTimeout(()=>{ marker.style.left = '88%'; fill.style.width = '100%'; }, 150);
+    });
+
+    let secondsLeft = 5;
+    document.getElementById('rideEta').textContent = secondsLeft + ' min';
+    const etaTimer = setInterval(()=>{
+      secondsLeft -= 1;
+      document.getElementById('rideEta').textContent = Math.max(secondsLeft,0) + ' min';
+      if(secondsLeft <= 0) clearInterval(etaTimer);
+    }, 900);
+
+    setTimeout(()=>{
+      // build receipt
+      document.getElementById('receiptTotal').textContent = fmt$(state.fareTotal, state.currencySuffix);
+      const methodLabelEn = state.payMethod === 'card' ? 'Paid via card' : 'Paid via Apple Pay';
+      const methodLabelFa = state.payMethod === 'card' ? 'پرداخت با کارت' : 'پرداخت با Apple Pay';
+      document.getElementById('receiptMeta').innerHTML = `<span class="en">${methodLabelEn}</span><span class="fa">${methodLabelFa}</span>`;
+      document.getElementById('receiptDriver').innerHTML = state.driver ? `<span class="en">${state.driver.d.en}</span><span class="fa">${state.driver.d.fa}</span>` : '—';
+      document.getElementById('receiptDist').textContent = state.pickup || '—';
+      const isFaR = document.documentElement.classList.contains('fa');
+      if(state.mode === 'ondemand'){
+        document.getElementById('receiptDur').textContent = state.bnHours + (isFaR ? ' ساعت' : ' hours') + (state.time ? ' · ' + formatTime(state.time) : '');
+      } else if(state.schedType === 'daily'){
+        document.getElementById('receiptDur').textContent = (isFaR ? 'تمام روز' : 'Full day') + (state.date ? ' · ' + formatDate(state.date, isFaR) + ', ' + formatTime(state.time) : '');
+      } else {
+        document.getElementById('receiptDur').textContent = state.hours + (isFaR ? ' ساعت' : ' hours') + (state.date ? ' · ' + formatDate(state.date, isFaR) + ', ' + formatTime(state.time) : '');
+      }
+
+      document.querySelectorAll('.star').forEach(s=>s.classList.remove('filled'));
+      showScreen('receipt');
+    }, 4800);
+  });
+
+  document.querySelectorAll('.star').forEach(star=>{
+    star.addEventListener('click', ()=>{
+      const v = parseInt(star.dataset.v, 10);
+      document.querySelectorAll('.star').forEach(s=>{
+        s.classList.toggle('filled', parseInt(s.dataset.v,10) <= v);
+      });
+    });
+  });
+
+  document.getElementById('doneBtn').addEventListener('click', ()=>{
+    document.getElementById('bnLocationInput').value = '';
+    document.getElementById('hourlyPickupInput').value = '';
+
+    // reset schedule type back to "by the hour"
+    state.schedType = 'hourly';
+    document.querySelectorAll('#schedTypeToggle button').forEach(b=>b.classList.toggle('active', b.dataset.schedtype==='hourly'));
+    document.getElementById('schedHourlyOnly').style.display = '';
+    document.getElementById('schedDailyOnly').style.display = 'none';
+    document.getElementById('schedRateNote').style.display = '';
+
+    showScreen('home');
+  });
+
+  // ================= ADMIN =================
+
+  function applySettingsToUI(){
+    const isFa = document.documentElement.classList.contains('fa');
+    const rateNoteEn = `$${settings.hourlyRate}/hr · rate caps at ${settings.rateCapHours} hours`;
+    const rateNoteFa = `${settings.hourlyRate} دلار در ساعت · سقف نرخ در ${settings.rateCapHours} ساعت`;
+    ['bnRateNote', 'schedRateNote'].forEach(id=>{
+      const el = document.getElementById(id);
+      el.querySelector('.en').textContent = rateNoteEn;
+      el.querySelector('.fa').textContent = rateNoteFa;
+    });
+    document.getElementById('fleetNameEn').textContent = settings.fleetName;
+    document.getElementById('fleetNameFa').textContent = settings.fleetName;
+    document.getElementById('fleetSeatsEn').textContent = settings.fleetSeats;
+    document.getElementById('fleetSeatsFa').textContent = settings.fleetSeats;
+  }
+
+  function renderDriverList(){
+    const list = document.getElementById('driverList');
+    if(DRIVERS.length === 0){
+      list.innerHTML = `<div style="color:var(--graphite); font-size:0.85rem; padding:10px 0;"><span class="en">No drivers yet — add one below.</span><span class="fa">هنوز راننده‌ای اضافه نشده — یکی در پایین اضافه کنید.</span></div>`;
+      return;
+    }
+    list.innerHTML = DRIVERS.map((d, i) => `
+      <div class="driver-row">
+        <div class="d-init">${escapeHtml(d.initial)}</div>
+        <div class="d-name">${escapeHtml(d.en)}</div>
+        <button class="d-remove" data-remove-driver="${i}" type="button">×</button>
+      </div>
+    `).join('');
+    list.querySelectorAll('[data-remove-driver]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const idx = parseInt(btn.dataset.removeDriver, 10);
+        DRIVERS.splice(idx, 1);
+        renderDriverList();
+      });
+    });
+  }
+
+  function populateAdminForm(){
+    document.getElementById('setHourlyRate').value = settings.hourlyRate;
+    document.getElementById('setDailyRate').value = settings.dailyRate;
+    document.getElementById('setRateCapHours').value = settings.rateCapHours;
+    document.getElementById('setMaxHours').value = settings.maxBookableHours;
+    document.getElementById('setDiscountStep').value = settings.discountStepPct;
+    document.getElementById('setMaxDiscount').value = settings.maxDiscountPct;
+    document.getElementById('setServiceFee').value = settings.serviceFee;
+    document.getElementById('setFleetName').value = settings.fleetName;
+    document.getElementById('setFleetSeats').value = settings.fleetSeats;
+    renderDriverList();
+  }
+
+  function openAdminView(){
+    document.getElementById('riderView').style.display = 'none';
+    document.getElementById('adminView').classList.add('open');
+    populateAdminForm();
+  }
+  function closeAdminView(){
+    document.getElementById('adminView').classList.remove('open');
+    document.getElementById('riderView').style.display = '';
+  }
+
+  const adminModal = document.getElementById('adminModal');
+  const adminPasswordInput = document.getElementById('adminPasswordInput');
+  const adminError = document.getElementById('adminError');
+
+  document.getElementById('adminOpenBtn').addEventListener('click', ()=>{
+    if(state.isAdmin){
+      openAdminView();
+      return;
+    }
+    adminError.classList.remove('show');
+    adminPasswordInput.value = '';
+    adminModal.classList.add('open');
+    setTimeout(()=> adminPasswordInput.focus(), 50);
+  });
+
+  document.getElementById('adminCancelBtn').addEventListener('click', ()=>{
+    adminModal.classList.remove('open');
+  });
+
+  function attemptAdminLogin(){
+    if(adminPasswordInput.value === ADMIN_PASSWORD){
+      state.isAdmin = true;
+      adminModal.classList.remove('open');
+      openAdminView();
+    } else {
+      adminError.classList.add('show');
+    }
+  }
+  document.getElementById('adminSubmitBtn').addEventListener('click', attemptAdminLogin);
+  adminPasswordInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') attemptAdminLogin(); });
+
+  document.getElementById('adminLogoutBtn').addEventListener('click', closeAdminView);
+
+  document.getElementById('addDriverBtn').addEventListener('click', ()=>{
+    const nameInput = document.getElementById('newDriverName');
+    const name = nameInput.value.trim();
+    if(!name) return;
+    const initial = name.charAt(0).toUpperCase();
+    DRIVERS.push({ en: name, fa: name, initial: initial });
+    nameInput.value = '';
+    renderDriverList();
+  });
+  document.getElementById('newDriverName').addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter') document.getElementById('addDriverBtn').click();
+  });
+
+  document.getElementById('saveSettingsBtn').addEventListener('click', ()=>{
+    settings.hourlyRate = Math.max(1, parseFloat(document.getElementById('setHourlyRate').value) || DEFAULT_SETTINGS.hourlyRate);
+    settings.dailyRate = Math.max(1, parseFloat(document.getElementById('setDailyRate').value) || DEFAULT_SETTINGS.dailyRate);
+    settings.rateCapHours = Math.max(1, parseInt(document.getElementById('setRateCapHours').value, 10) || DEFAULT_SETTINGS.rateCapHours);
+    settings.maxBookableHours = Math.max(settings.rateCapHours, parseInt(document.getElementById('setMaxHours').value, 10) || DEFAULT_SETTINGS.maxBookableHours);
+    settings.discountStepPct = Math.max(0, parseFloat(document.getElementById('setDiscountStep').value) || 0);
+    settings.maxDiscountPct = Math.min(100, Math.max(0, parseFloat(document.getElementById('setMaxDiscount').value) || 0));
+    settings.serviceFee = Math.max(0, parseFloat(document.getElementById('setServiceFee').value) || 0);
+    settings.fleetName = document.getElementById('setFleetName').value.trim() || DEFAULT_SETTINGS.fleetName;
+    settings.fleetSeats = document.getElementById('setFleetSeats').value.trim() || DEFAULT_SETTINGS.fleetSeats;
+
+    // keep steppers in range of the new max
+    state.bnHours = Math.min(state.bnHours, settings.maxBookableHours);
+    state.hours = Math.min(state.hours, settings.maxBookableHours);
+    document.getElementById('bnHoursVal').textContent = state.bnHours;
+    document.getElementById('hoursVal').textContent = state.hours;
+
+    applySettingsToUI();
+    populateAdminForm();
+
+    const toast = document.getElementById('saveToast');
+    toast.classList.add('show');
+    setTimeout(()=> toast.classList.remove('show'), 1800);
+  });
+
+  document.getElementById('resetSettingsBtn').addEventListener('click', ()=>{
+    Object.assign(settings, DEFAULT_SETTINGS);
+    DRIVERS = DEFAULT_DRIVERS.map(d => Object.assign({}, d));
+    applySettingsToUI();
+    populateAdminForm();
+  });
+
+  applySettingsToUI();
+
+})();
+</script>
+
+</body>
+</html>
