@@ -644,6 +644,7 @@
 
         <div class="spacer"></div>
         <button class="btn btn-primary" id="payBtn"><span class="en">Pay now</span></button>
+        <div class="auth-error" id="paymentError"><span class="en">Payment failed — please try again.</span></div>
       </div>
 
       <!-- SCREEN: SCHEDULED CONFIRMATION -->
@@ -1315,14 +1316,23 @@
     });
   });
 
-  document.getElementById('payBtn').addEventListener('click', ()=>{
+  document.getElementById('payBtn').addEventListener('click', async ()=>{
+    const payBtn = document.getElementById('payBtn');
+    const paymentError = document.getElementById('paymentError');
+    paymentError.classList.remove('show');
+
     if(state.walletApplied > 0){
       if(!state.payMethod || state.payMethod === 'wallet'){
         document.getElementById('remainingMethodError').classList.add('show');
         return;
       }
-      state.user.wallet = Math.max(0, (state.user.wallet || 0) - state.walletApplied);
-      updateWalletDisplays();
+      payBtn.disabled = true;
+      const ok = await adjustWallet(-state.walletApplied, 'ride_payment');
+      payBtn.disabled = false;
+      if(!ok){
+        paymentError.classList.add('show');
+        return;
+      }
     } else if(state.payMethod === 'wallet'){
       const balance = (state.user && state.user.wallet) || 0;
       if(balance < state.fareTotal){
@@ -1333,12 +1343,17 @@
         }
         return;
       }
-      state.user.wallet = balance - state.fareTotal;
-      updateWalletDisplays();
+      payBtn.disabled = true;
+      const ok = await adjustWallet(-state.fareTotal, 'ride_payment');
+      payBtn.disabled = false;
+      if(!ok){
+        paymentError.classList.add('show');
+        return;
+      }
     }
 
     if(state.mode === 'hourly'){
-      confirmScheduledRide();
+      await confirmScheduledRide();
       return;
     }
 
@@ -1381,7 +1396,7 @@
       if(secondsLeft <= 0) clearInterval(etaTimer);
     }, 900);
 
-    setTimeout(()=>{
+    setTimeout(async ()=>{
       // build receipt
       document.getElementById('receiptTotal').textContent = fmt$(state.fareTotal, state.currencySuffix);
       const methodLabels = {
@@ -1414,6 +1429,7 @@
       if(state.user){
         state.user.rides = state.user.rides || [];
         const rideRecord = {
+          id: null,
           completedAt: new Date(),
           mode: state.mode,
           schedType: state.schedType,
@@ -1427,6 +1443,28 @@
         };
         state.user.rides.unshift(rideRecord);
         state.currentRideRecord = rideRecord;
+
+        try {
+          const { data, error } = await sb.from('ride_history').insert({
+            user_id: state.user.id,
+            pickup: rideRecord.pickup,
+            mode: rideRecord.mode,
+            sched_type: rideRecord.schedType,
+            duration_text_en: rideRecord.durationText,
+            fare_total: rideRecord.fareTotal,
+            currency_suffix: rideRecord.currencySuffix,
+            pay_method: rideRecord.payMethod,
+            driver_name_en: rideRecord.driverEn,
+            rating: 0
+          }).select().single();
+          if(error){
+            console.error('Could not save ride to history:', error.message);
+          } else {
+            rideRecord.id = data.id;
+          }
+        } catch(e){
+          console.error('Network error saving ride history:', e);
+        }
       }
 
       showScreen('receipt');
@@ -1434,12 +1472,24 @@
   });
 
   document.querySelectorAll('.star').forEach(star=>{
-    star.addEventListener('click', ()=>{
+    star.addEventListener('click', async ()=>{
       const v = parseInt(star.dataset.v, 10);
       document.querySelectorAll('.star').forEach(s=>{
         s.classList.toggle('filled', parseInt(s.dataset.v,10) <= v);
       });
-      if(state.currentRideRecord) state.currentRideRecord.rating = v;
+      if(state.currentRideRecord){
+        state.currentRideRecord.rating = v;
+        if(state.currentRideRecord.id){
+          try {
+            const { error } = await sb.from('ride_history')
+              .update({ rating: v })
+              .eq('id', state.currentRideRecord.id);
+            if(error) console.error('Could not save rating:', error.message);
+          } catch(e){
+            console.error('Network error saving rating:', e);
+          }
+        }
+      }
     });
   });
 
@@ -1669,6 +1719,37 @@
     }
   }
 
+  // Applies a wallet change (positive for top-ups, negative for ride payments)
+  // to Supabase first, then only updates local state once that succeeds — so
+  // the on-screen balance never drifts from what's actually saved.
+  // Returns true on success, false on failure (caller should not assume the
+  // change happened if this returns false).
+  async function adjustWallet(amount, type, relatedRideId){
+    if(!state.user) return false;
+    const newBalance = Math.round((state.user.wallet + amount) * 100) / 100;
+    try {
+      const { error: profileErr } = await sb.from('profiles')
+        .update({ wallet_balance: newBalance })
+        .eq('id', state.user.id);
+      if(profileErr){ console.error('Could not update wallet balance:', profileErr.message); return false; }
+
+      const { error: txErr } = await sb.from('wallet_transactions').insert({
+        user_id: state.user.id,
+        amount: amount,
+        type: type,
+        related_ride_id: relatedRideId || null
+      });
+      if(txErr){ console.warn('Wallet balance updated but failed to log transaction:', txErr.message); }
+
+      state.user.wallet = newBalance;
+      updateWalletDisplays();
+      return true;
+    } catch(e){
+      console.error('Network error adjusting wallet:', e);
+      return false;
+    }
+  }
+
   const GENDER_LABELS = {
     '': '',
     female: 'Female',
@@ -1749,12 +1830,12 @@
     return new Date(dateStr + 'T' + timeStr + ':00');
   }
 
-  function confirmScheduledRide(){
+  async function confirmScheduledRide(){
     const dt = buildSchedDateTime();
     const isDaily = state.schedType === 'daily';
 
     const record = {
-      id: Date.now() + '_' + Math.floor(Math.random()*1000),
+      id: null,
       dateTime: dt,
       schedType: state.schedType,
       hours: state.hours,
@@ -1764,6 +1845,27 @@
       reminderAt: dt ? new Date(dt.getTime() - 2*60*60*1000) : null,
       reminderShown: false
     };
+
+    try {
+      const { data, error } = await sb.from('scheduled_rides').insert({
+        user_id: state.user.id,
+        pickup: record.pickup,
+        sched_type: record.schedType,
+        hours: record.hours,
+        ride_datetime: dt ? dt.toISOString() : null,
+        fare_total: record.fareTotal,
+        currency_suffix: record.currencySuffix,
+        reminder_at: record.reminderAt ? record.reminderAt.toISOString() : null,
+        reminder_shown: false
+      }).select().single();
+      if(error){
+        console.error('Could not save scheduled ride:', error.message);
+      } else {
+        record.id = data.id;
+      }
+    } catch(e){
+      console.error('Network error saving scheduled ride:', e);
+    }
 
     state.user.scheduledRides = state.user.scheduledRides || [];
     state.user.scheduledRides.push(record);
@@ -1826,10 +1928,20 @@
     }).join('');
 
     list.querySelectorAll('[data-cancel-sched]').forEach(function(btn){
-      btn.addEventListener('click', function(){
+      btn.addEventListener('click', async function(){
         const id = btn.dataset.cancelSched;
-        state.user.scheduledRides = state.user.scheduledRides.filter(function(r){ return r.id !== id; });
-        renderScheduledRides();
+        btn.disabled = true;
+        try {
+          if(id && id !== 'null'){
+            const { error } = await sb.from('scheduled_rides').delete().eq('id', id);
+            if(error){ console.error('Could not cancel scheduled ride:', error.message); btn.disabled = false; return; }
+          }
+          state.user.scheduledRides = state.user.scheduledRides.filter(function(r){ return String(r.id) !== id; });
+          renderScheduledRides();
+        } catch(e){
+          console.error('Network error canceling scheduled ride:', e);
+          btn.disabled = false;
+        }
       });
     });
   }
@@ -1885,22 +1997,31 @@
       list.innerHTML = `<div style="color:var(--graphite); font-size:0.85rem; padding:14px 0;"><span class="en">No cards saved — add one below.</span></div>`;
       return;
     }
-    list.innerHTML = cards.map(function(c, i){
+    list.innerHTML = cards.map(function(c){
       const label = CARD_BRAND_LABELS[c.brand] || CARD_BRAND_LABELS.card;
       return `
         <div class="driver-row">
           <div class="d-init">${label.charAt(0)}</div>
           <div class="d-name">${label} •••• ${c.last4}</div>
-          <button class="d-remove" data-remove-card="${i}" type="button">×</button>
+          <button class="d-remove" data-remove-card="${c.id}" type="button">×</button>
         </div>
       `;
     }).join('');
     list.querySelectorAll('[data-remove-card]').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        const idx = parseInt(btn.dataset.removeCard, 10);
-        state.user.cards.splice(idx, 1);
-        renderCardList();
-        updateCardPayOption();
+      btn.addEventListener('click', async function(){
+        const cardId = btn.dataset.removeCard;
+        btn.disabled = true;
+        try {
+          const { error } = await sb.from('cards').delete().eq('id', cardId);
+          if(error){ console.error('Could not remove card:', error.message); return; }
+          state.user.cards = state.user.cards.filter(function(c){ return String(c.id) !== cardId; });
+          renderCardList();
+          updateCardPayOption();
+        } catch(e){
+          console.error('Network error removing card:', e);
+        } finally {
+          btn.disabled = false;
+        }
       });
     });
   }
@@ -1928,18 +2049,32 @@
       `<span class="en">${label}</span>`;
   }
 
-  document.getElementById('addCardBtn').addEventListener('click', function(){
+  document.getElementById('addCardBtn').addEventListener('click', async function(){
     if(!state.user) return;
     const input = document.getElementById('newCardInput');
+    const addBtn = document.getElementById('addCardBtn');
     const digits = input.value.replace(/\D/g, '');
     if(digits.length < 4) return;
     const last4 = digits.slice(-4);
     const brand = detectCardBrand(digits);
-    state.user.cards = state.user.cards || [];
-    state.user.cards.push({ brand: brand, last4: last4 });
-    input.value = '';
-    renderCardList();
-    updateCardPayOption();
+
+    addBtn.disabled = true;
+    try {
+      const { data, error } = await sb.from('cards')
+        .insert({ user_id: state.user.id, brand: brand, last4: last4 })
+        .select()
+        .single();
+      if(error){ console.error('Could not add card:', error.message); return; }
+      state.user.cards = state.user.cards || [];
+      state.user.cards.push({ id: data.id, brand: data.brand, last4: data.last4 });
+      input.value = '';
+      renderCardList();
+      updateCardPayOption();
+    } catch(e){
+      console.error('Network error adding card:', e);
+    } finally {
+      addBtn.disabled = false;
+    }
   });
   document.getElementById('newCardInput').addEventListener('keydown', function(e){
     if(e.key === 'Enter') document.getElementById('addCardBtn').click();
@@ -1973,10 +2108,11 @@
   });
 
   document.querySelectorAll('[data-add-funds]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
+    btn.addEventListener('click', async ()=>{
       if(!state.user) return;
-      state.user.wallet += parseFloat(btn.dataset.addFunds);
-      updateWalletDisplays();
+      btn.disabled = true;
+      await adjustWallet(parseFloat(btn.dataset.addFunds), 'topup');
+      btn.disabled = false;
     });
   });
 
