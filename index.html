@@ -816,7 +816,10 @@
         </div>
         <div class="field">
           <label><span class="en">Email</span></label>
-          <input type="email" id="profileEmailInput" placeholder="you@example.com">
+          <input type="email" id="profileEmailInput" placeholder="you@example.com" disabled style="opacity:0.6; cursor:not-allowed;">
+          <div style="font-size:0.72rem; color:var(--graphite); margin-top:4px;">
+            <span class="en">This is your sign-in email and can't be changed here.</span>
+          </div>
         </div>
         <div class="field">
           <label><span class="en">Phone number</span></label>
@@ -1473,6 +1476,80 @@
 
   // ================= AUTH (sign in / sign up) =================
 
+  // Pulls this user's real data (profile, cards, ride history, scheduled
+  // rides) from Supabase and hydrates state.user with it. Writes (saving
+  // profile edits, adding cards, logging new rides, etc.) are a separate
+  // piece of work still to come — this function only handles reading.
+  async function loadUserData(supaUser){
+    state.user = {
+      id: supaUser.id,
+      name: (supaUser.user_metadata && supaUser.user_metadata.name) || supaUser.email.split('@')[0],
+      email: supaUser.email,
+      phone: '', photo: null, gender: '',
+      wallet: 0,
+      cards: [], rides: [], scheduledRides: []
+    };
+
+    try {
+      const { data: profile } = await sb.from('profiles').select('*').eq('id', supaUser.id).single();
+      if(profile){
+        state.user.name = profile.name || state.user.name;
+        state.user.phone = profile.phone || '';
+        state.user.gender = profile.gender || '';
+        state.user.photo = profile.photo_url || null;
+        state.user.wallet = Number(profile.wallet_balance) || 0;
+      }
+    } catch(e){ console.warn('Could not load profile:', e); }
+
+    try {
+      const { data: cards } = await sb.from('cards').select('*').eq('user_id', supaUser.id).order('created_at');
+      if(cards) state.user.cards = cards.map(c => ({ id: c.id, brand: c.brand, last4: c.last4 }));
+    } catch(e){ console.warn('Could not load cards:', e); }
+
+    try {
+      const { data: rides } = await sb.from('ride_history').select('*').eq('user_id', supaUser.id).order('completed_at', { ascending:false });
+      if(rides) state.user.rides = rides.map(r => ({
+        completedAt: new Date(r.completed_at),
+        mode: r.mode, schedType: r.sched_type, pickup: r.pickup,
+        durationText: r.duration_text_en,
+        fareTotal: Number(r.fare_total), currencySuffix: r.currency_suffix || '',
+        payMethod: r.pay_method, driverEn: r.driver_name_en, rating: r.rating || 0
+      }));
+    } catch(e){ console.warn('Could not load ride history:', e); }
+
+    try {
+      const { data: sched } = await sb.from('scheduled_rides').select('*').eq('user_id', supaUser.id).order('ride_datetime');
+      if(sched) state.user.scheduledRides = sched.map(s => ({
+        id: s.id, dateTime: new Date(s.ride_datetime), schedType: s.sched_type, hours: s.hours,
+        pickup: s.pickup, fareTotal: Number(s.fare_total), currencySuffix: s.currency_suffix || '',
+        reminderAt: s.reminder_at ? new Date(s.reminder_at) : null, reminderShown: !!s.reminder_shown
+      }));
+    } catch(e){ console.warn('Could not load scheduled rides:', e); }
+  }
+
+  function enterApp(){
+    document.getElementById('userChipName').textContent = state.user.name;
+    document.getElementById('userChip').style.display = '';
+    renderUserAvatar();
+    updateWalletDisplays();
+    updateCardPayOption();
+    document.getElementById('authView').style.display = 'none';
+    document.getElementById('riderView').style.display = '';
+  }
+
+  // if the visitor already has a valid Supabase session (e.g. they signed in
+  // earlier and haven't signed out), skip the auth screen entirely
+  async function checkExistingSession(){
+    try {
+      const { data } = await sb.auth.getSession();
+      if(data && data.session && data.session.user){
+        await loadUserData(data.session.user);
+        enterApp();
+      }
+    } catch(e){ console.warn('Session check failed:', e); }
+  }
+  checkExistingSession();
+
   document.querySelectorAll('#authTypeToggle button').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       document.querySelectorAll('#authTypeToggle button').forEach(b=>b.classList.toggle('active', b===btn));
@@ -1485,42 +1562,69 @@
     });
   });
 
-  function attemptAuth(){
+  async function attemptAuth(){
     const isSignup = state.authMode === 'signup';
     const nameVal = document.getElementById('authNameInput').value.trim();
     const emailVal = document.getElementById('authEmailInput').value.trim();
     const passVal = document.getElementById('authPasswordInput').value;
     const errorEl = document.getElementById('authError');
+    const submitBtn = document.getElementById('authSubmitBtn');
 
     const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
-    const passOk = passVal.length >= 4;
+    const passOk = passVal.length >= 6; // Supabase's own minimum
     const nameOk = !isSignup || nameVal.length > 0;
 
     if(!emailOk || !passOk || !nameOk){
       errorEl.querySelector('.en').textContent = !nameOk
         ? 'Please enter your name.'
-        : !emailOk ? 'Please enter a valid email address.' : 'Password must be at least 4 characters.';
+        : !emailOk ? 'Please enter a valid email address.' : 'Password must be at least 6 characters.';
       errorEl.classList.add('show');
       return;
     }
-
     errorEl.classList.remove('show');
-    const displayName = isSignup ? nameVal : emailVal.split('@')[0];
-    state.user = { name: displayName, email: emailVal, phone: '', photo: null, gender: '', wallet: 0, cards: [{ brand: 'Visa', last4: '4471' }], rides: [], scheduledRides: [] };
 
-    document.getElementById('userChipName').textContent = displayName;
-    document.getElementById('userChip').style.display = '';
-    renderUserAvatar();
-    updateWalletDisplays();
-    updateCardPayOption();
+    submitBtn.disabled = true;
+    const originalLabel = submitBtn.querySelector('.en').textContent;
+    submitBtn.querySelector('.en').textContent = isSignup ? 'Creating account…' : 'Signing in…';
 
-    document.getElementById('authView').style.display = 'none';
-    document.getElementById('riderView').style.display = '';
+    try {
+      let authResult;
+      if(isSignup){
+        authResult = await sb.auth.signUp({
+          email: emailVal,
+          password: passVal,
+          options: { data: { name: nameVal } }
+        });
+      } else {
+        authResult = await sb.auth.signInWithPassword({ email: emailVal, password: passVal });
+      }
 
-    // clear the form for next time
-    document.getElementById('authNameInput').value = '';
-    document.getElementById('authEmailInput').value = '';
-    document.getElementById('authPasswordInput').value = '';
+      if(authResult.error){
+        errorEl.querySelector('.en').textContent = authResult.error.message;
+        errorEl.classList.add('show');
+        return;
+      }
+
+      const supaUser = authResult.data.user;
+      if(!supaUser){
+        errorEl.querySelector('.en').textContent = 'Something went wrong. Please try again.';
+        errorEl.classList.add('show');
+        return;
+      }
+
+      await loadUserData(supaUser);
+      enterApp();
+
+      document.getElementById('authNameInput').value = '';
+      document.getElementById('authEmailInput').value = '';
+      document.getElementById('authPasswordInput').value = '';
+    } catch(e){
+      errorEl.querySelector('.en').textContent = 'Network error — please try again.';
+      errorEl.classList.add('show');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.querySelector('.en').textContent = originalLabel;
+    }
   }
 
   document.getElementById('authSubmitBtn').addEventListener('click', attemptAuth);
@@ -1528,7 +1632,8 @@
     document.getElementById(id).addEventListener('keydown', (e)=>{ if(e.key === 'Enter') attemptAuth(); });
   });
 
-  document.getElementById('signOutBtn').addEventListener('click', ()=>{
+  document.getElementById('signOutBtn').addEventListener('click', async ()=>{
+    await sb.auth.signOut();
     state.user = null;
     document.getElementById('userChip').style.display = 'none';
     document.getElementById('riderView').style.display = 'none';
@@ -1875,24 +1980,50 @@
     });
   });
 
-  document.getElementById('profileSaveBtn').addEventListener('click', ()=>{
+  document.getElementById('profileSaveBtn').addEventListener('click', async ()=>{
     if(!state.user) return;
     const name = document.getElementById('profileNameInput').value.trim();
-    const email = document.getElementById('profileEmailInput').value.trim();
     const phone = document.getElementById('profilePhoneInput').value.trim();
     const gender = document.getElementById('profileGenderInput').value;
-
-    state.user.name = name || state.user.name;
-    state.user.email = email || state.user.email;
-    state.user.phone = phone;
-    state.user.gender = gender;
-
-    document.getElementById('userChipName').textContent = state.user.name;
-    renderUserAvatar();
-
+    const saveBtn = document.getElementById('profileSaveBtn');
     const toast = document.getElementById('profileSaved');
-    toast.classList.add('show');
-    setTimeout(()=> toast.classList.remove('show'), 1800);
+
+    const newName = name || state.user.name;
+
+    saveBtn.disabled = true;
+    const originalLabel = saveBtn.querySelector('.en').textContent;
+    saveBtn.querySelector('.en').textContent = 'Saving…';
+
+    try {
+      const { error } = await sb.from('profiles').update({
+        name: newName,
+        phone: phone,
+        gender: gender
+      }).eq('id', state.user.id);
+
+      if(error){
+        console.error('Could not save profile:', error.message);
+        toast.querySelector('.en').textContent = 'Could not save — try again.';
+        toast.style.color = '#c0154a';
+      } else {
+        state.user.name = newName;
+        state.user.phone = phone;
+        state.user.gender = gender;
+        document.getElementById('userChipName').textContent = state.user.name;
+        renderUserAvatar();
+        toast.querySelector('.en').textContent = 'Saved ✓';
+        toast.style.color = '';
+      }
+    } catch(e){
+      console.error('Network error saving profile:', e);
+      toast.querySelector('.en').textContent = 'Could not save — try again.';
+      toast.style.color = '#c0154a';
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.querySelector('.en').textContent = originalLabel;
+      toast.classList.add('show');
+      setTimeout(()=> toast.classList.remove('show'), 1800);
+    }
   });
 
   // ================= HELP & SUPPORT =================
