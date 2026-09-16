@@ -6,7 +6,7 @@
 <title>SheDrives — Book a ride</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700;800&family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#17131c;
@@ -29,39 +29,18 @@
     color:var(--ink); font-family:"Inter", sans-serif; -webkit-font-smoothing:antialiased;
     display:flex; flex-direction:column; align-items:center;
   }
-  html.fa body{font-family:"Vazirmatn","Inter",sans-serif;}
   *{ -webkit-tap-highlight-color: transparent; }
 
-  .en{display:inline;} .fa{display:none;}
-  html.fa .en{display:none;} html.fa .fa{display:inline;}
-  .en.block{display:block;} html.fa .en.block{display:none;}
-  .fa.block{display:none;} html.fa .fa.block{display:block;}
+  .en{display:inline;}
 
   h1,h2,h3,.serif{font-family:"Fraunces", serif; font-weight:500; letter-spacing:-0.01em;}
-  html.fa h1, html.fa h2, html.fa h3, html.fa .serif{font-family:"Vazirmatn","Inter",sans-serif; font-weight:700; letter-spacing:0;}
 
   /* ===== top bar ===== */
   .topbar{width:100%; max-width:1080px; padding:26px 24px 0; display:flex; align-items:center; justify-content:space-between;}
   .wordmark{font-family:"Fraunces", serif; font-weight:600; font-size:1.35rem; display:flex; align-items:center; gap:9px;}
-  html.fa .wordmark{font-family:"Vazirmatn",sans-serif; font-weight:700;}
   .wordmark .dot{width:8px;height:8px;border-radius:50%;background:var(--pink);}
-  .lang-toggle{display:flex; align-items:center; border:1px solid var(--ink); border-radius:999px; padding:3px; gap:2px;}
-  .lang-toggle button{border:none; background:transparent; padding:6px 14px; border-radius:999px; font:inherit; font-size:0.78rem; font-weight:600; cursor:pointer; color:var(--graphite); font-family:"Inter",sans-serif;}
-  .lang-toggle button.active{background:var(--ink); color:#fff;}
 
   .topbar-right{display:flex; align-items:center; gap:10px;}
-  .admin-link{
-    display:flex; align-items:center; gap:6px; border:1px solid var(--line); background:#fff;
-    padding:8px 14px; border-radius:999px; font-size:0.78rem; font-weight:600; color:var(--graphite);
-    cursor:pointer; font-family:inherit;
-  }
-  .admin-link:hover{border-color:var(--ink); color:var(--ink);}
-  .admin-link svg{width:14px; height:14px; flex:none;}
-  .admin-badge{
-    display:inline-flex; align-items:center; gap:6px; background:var(--ink); color:#fff;
-    padding:8px 14px; border-radius:999px; font-size:0.78rem; font-weight:600; cursor:pointer; border:none; font-family:inherit;
-  }
-  .admin-badge svg{width:14px; height:14px; color:var(--pink);}
 
   /* ===== admin modal ===== */
   .modal-overlay{
@@ -84,9 +63,6 @@
   .modal-error.show{display:block;}
   .modal-actions{display:flex; gap:10px; margin-top:6px;}
   .modal-actions .btn{padding:12px;}
-
-  /* ===== admin dashboard ===== */
-  .admin-wrap{width:100%; max-width:760px; padding:34px 20px 80px; display:none;}
 
   /* ===== auth (sign in / sign up) ===== */
   .auth-wrap{width:100%; max-width:420px; padding:60px 20px 80px;}
@@ -113,24 +89,6 @@
     border:none; background:var(--pink-soft-2); color:var(--pink-deep); font-weight:700; font-size:0.72rem;
     padding:5px 10px; border-radius:999px; cursor:pointer; font-family:inherit;
   }
-  .admin-wrap.open{display:block;}
-  .admin-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;}
-  .admin-head h1{font-size:1.7rem; margin:0;}
-  .admin-note{color:var(--graphite); font-size:0.88rem; margin:0 0 30px; line-height:1.5;}
-  .admin-section{
-    background:#fff; border:1px solid var(--line); border-radius:20px; padding:26px; margin-bottom:22px;
-  }
-  .admin-section h2{font-size:1.05rem; margin:0 0 4px;}
-  .admin-section .sec-sub{color:var(--graphite); font-size:0.82rem; margin:0 0 20px;}
-  .admin-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
-  @media (max-width:560px){ .admin-grid{grid-template-columns:1fr;} }
-  .admin-field label{display:block; font-size:0.74rem; font-weight:700; color:var(--graphite); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.03em;}
-  .admin-field input{
-    width:100%; border:1px solid var(--line); border-radius:10px; padding:10px 12px; font-size:0.92rem;
-    font-family:inherit; background:var(--paper); color:var(--ink);
-  }
-  .admin-field input:focus{outline:2px solid var(--pink); outline-offset:1px;}
-  .admin-field .hint{font-size:0.72rem; color:var(--graphite); margin-top:4px;}
 
   .driver-row{display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--line);}
   .driver-row:last-child{border-bottom:none;}
@@ -143,19 +101,12 @@
   .driver-row .d-remove:hover{border-color:#c0154a; color:#c0154a;}
   .driver-add{display:flex; gap:10px; margin-top:14px;}
   .section-label{font-size:0.78rem; font-weight:700; color:var(--graphite); text-transform:uppercase; letter-spacing:0.03em; margin:4px 0 10px;}
-  html.fa .section-label{text-transform:none;}
   .driver-add input{flex:1;}
-
-  .admin-actions{display:flex; gap:12px; align-items:center; flex-wrap:wrap;}
-  .admin-actions .btn{width:auto; padding:13px 22px;}
-  .save-toast{font-size:0.82rem; color:var(--green); font-weight:600; opacity:0; transition:opacity .2s;}
-  .save-toast.show{opacity:1;}
 
   .intro{max-width:640px; text-align:center; padding:38px 24px 8px;}
   .intro .kicker{font-size:0.78rem; font-weight:700; color:var(--pink-deep); letter-spacing:0.02em; margin-bottom:10px;}
   .intro h1{font-size:clamp(1.6rem,3vw,2.1rem); margin:0 0 10px; line-height:1.2;}
   .intro p{color:var(--graphite); font-size:0.98rem; line-height:1.5; margin:0;}
-  html.fa .intro p{line-height:1.85;}
 
   /* ===== phone shell ===== */
   .stage{width:100%; display:flex; justify-content:center; padding:34px 20px 70px;}
@@ -188,7 +139,6 @@
     display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none; color:var(--ink);
   }
   .screen-title{font-family:"Fraunces",serif; font-size:1.15rem; font-weight:500;}
-  html.fa .screen-title{font-family:"Vazirmatn",sans-serif; font-weight:700;}
 
   /* ===== home screen ===== */
   .segmented{display:flex; background:var(--pink-soft-2); border-radius:999px; padding:4px; margin-bottom:20px; flex:none;}
@@ -200,7 +150,6 @@
 
   .field{margin-bottom:14px;}
   .field label{display:block; font-size:0.74rem; font-weight:700; color:var(--graphite); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.03em;}
-  html.fa .field label{text-transform:none;}
   .field input, .field select, .field textarea{
     width:100%; border:1px solid var(--line); border-radius:12px; padding:12px 14px; font-size:0.94rem;
     font-family:inherit; background:var(--paper); color:var(--ink);
@@ -244,7 +193,6 @@
 
   .stepper{display:flex; align-items:center; justify-content:space-between; border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin-bottom:18px;}
   .stepper .val{font-family:"Fraunces",serif; font-size:1.4rem;}
-  html.fa .stepper .val{font-family:"Inter",sans-serif; font-weight:700;}
   .stepper button{
     width:34px; height:34px; border-radius:50%; border:1px solid var(--ink); background:#fff; font-size:1.1rem;
     cursor:pointer; color:var(--ink); font-family:inherit;
@@ -306,13 +254,11 @@
   @keyframes pulse{ from{transform:scale(0.6); opacity:0.6;} to{transform:scale(1.5); opacity:0;} }
   .pulse-core{width:64px; height:64px; border-radius:50%; background:var(--ink); display:flex; align-items:center; justify-content:center; color:var(--pink);}
   .matching-title{font-family:"Fraunces",serif; font-size:1.2rem;}
-  html.fa .matching-title{font-family:"Vazirmatn",sans-serif; font-weight:700;}
   .matching-sub{color:var(--graphite); font-size:0.88rem;}
 
   /* ===== driver / ride ===== */
   .driver-card{display:flex; align-items:center; gap:14px; border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:18px;}
   .avatar{width:52px; height:52px; border-radius:50%; background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center; font-family:"Fraunces",serif; font-size:1.1rem; flex:none;}
-  html.fa .avatar{font-family:"Vazirmatn",sans-serif;}
   .driver-name{font-weight:700; font-size:0.98rem;}
   .driver-meta{font-size:0.78rem; color:var(--graphite); margin-top:2px;}
   .plate-tag{margin-inline-start:auto; background:var(--ink); color:#fff; font-size:0.72rem; font-weight:700; padding:6px 10px; border-radius:8px; letter-spacing:0.03em;}
@@ -324,7 +270,6 @@
     display:flex; align-items:center; justify-content:center; font-family:"Fraunces",serif; font-size:2rem;
     position:relative; overflow:hidden; flex:none;
   }
-  html.fa .profile-avatar{font-family:"Vazirmatn",sans-serif;}
   .profile-avatar img{width:100%; height:100%; object-fit:cover; display:block;}
   .avatar-edit-btn{
     display:inline-flex; align-items:center; gap:6px; font-size:0.78rem; font-weight:600; color:var(--pink-deep);
@@ -336,7 +281,6 @@
   }
   .wallet-card .w-label{font-size:0.76rem; color:#c7c0cf; margin-bottom:6px;}
   .wallet-card .w-balance{font-family:"Fraunces",serif; font-size:2rem; margin-bottom:16px;}
-  html.fa .wallet-card .w-balance{font-family:"Vazirmatn",sans-serif; font-weight:700;}
   .wallet-chips{display:flex; gap:8px;}
   .wallet-chips button{
     flex:1; border:1px solid rgba(255,255,255,0.25); background:rgba(255,255,255,0.08); color:#fff;
@@ -350,7 +294,6 @@
   .ride-card .rc-top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;}
   .ride-card .rc-date{font-size:0.76rem; color:var(--graphite);}
   .ride-card .rc-fare{font-family:"Fraunces",serif; font-weight:600; font-size:1.05rem;}
-  html.fa .ride-card .rc-fare{font-family:"Vazirmatn",sans-serif; font-weight:700;}
   .ride-card .rc-loc{font-weight:600; font-size:0.92rem; margin-bottom:2px;}
   .ride-card .rc-meta{font-size:0.8rem; color:var(--graphite); margin-bottom:8px;}
   .ride-card .rc-bottom{display:flex; justify-content:space-between; align-items:center; font-size:0.78rem; color:var(--graphite);}
@@ -428,29 +371,7 @@
         <div class="u-avatar" id="userAvatar">?</div>
         <span id="userChipName">—</span>
       </button>
-      <button id="signOutBtn"><span class="en">Sign out</span><span class="fa">خروج</span></button>
-    </div>
-    <button class="admin-link" id="adminOpenBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-      <span class="en">Admin</span><span class="fa">مدیریت</span>
-    </button>
-    <div class="lang-toggle" id="langToggle">
-      <button data-lang="en" class="active">EN</button>
-      <button data-lang="fa">فا</button>
-    </div>
-  </div>
-</div>
-
-<!-- ADMIN LOGIN MODAL -->
-<div class="modal-overlay" id="adminModal">
-  <div class="modal-card">
-    <h3><span class="en">Admin sign-in</span><span class="fa">ورود مدیر</span></h3>
-    <p><span class="en">Enter the admin password to edit pricing, fleet, and drivers.</span><span class="fa">برای ویرایش قیمت، ناوگان و رانندگان، رمز عبور مدیر را وارد کنید.</span></p>
-    <input type="password" id="adminPasswordInput" placeholder="Password" autocomplete="off">
-    <div class="modal-error" id="adminError"><span class="en">Incorrect password.</span><span class="fa">رمز عبور اشتباه است.</span></div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" id="adminCancelBtn" style="border:1px solid var(--line);"><span class="en">Cancel</span><span class="fa">لغو</span></button>
-      <button class="btn btn-primary" id="adminSubmitBtn"><span class="en">Sign in</span><span class="fa">ورود</span></button>
+      <button id="signOutBtn"><span class="en">Sign out</span></button>
     </div>
   </div>
 </div>
@@ -458,11 +379,11 @@
 <!-- PARTIAL WALLET CONFIRMATION -->
 <div class="modal-overlay" id="partialWalletModal">
   <div class="modal-card">
-    <h3><span class="en">Use your wallet balance?</span><span class="fa">از موجودی کیف پول استفاده شود؟</span></h3>
+    <h3><span class="en">Use your wallet balance?</span></h3>
     <p id="partialWalletText">—</p>
     <div class="modal-actions">
-      <button class="btn btn-ghost" id="partialWalletNoBtn" style="border:1px solid var(--line);"><span class="en">Not now</span><span class="fa">فعلاً نه</span></button>
-      <button class="btn btn-primary" id="partialWalletYesBtn"><span class="en">Apply wallet</span><span class="fa">اعمال کیف پول</span></button>
+      <button class="btn btn-ghost" id="partialWalletNoBtn" style="border:1px solid var(--line);"><span class="en">Not now</span></button>
+      <button class="btn btn-primary" id="partialWalletYesBtn"><span class="en">Apply wallet</span></button>
     </div>
   </div>
 </div>
@@ -470,42 +391,42 @@
 <!-- SIGN IN / SIGN UP -->
 <div class="auth-wrap" id="authView">
   <div class="auth-card">
-    <h1><span class="en">Welcome to SheDrives</span><span class="fa">به SheDrives خوش آمدید</span></h1>
-    <p class="auth-sub"><span class="en">Sign in or create an account to book your ride.</span><span class="fa">برای رزرو سفر خود وارد شوید یا حساب کاربری بسازید.</span></p>
+    <h1><span class="en">Welcome to SheDrives</span></h1>
+    <p class="auth-sub"><span class="en">Sign in or create an account to book your ride.</span></p>
 
     <div class="segmented" id="authTypeToggle" style="margin-bottom:22px;">
-      <button class="active" data-authtype="signin"><span class="en">Sign in</span><span class="fa">ورود</span></button>
-      <button data-authtype="signup"><span class="en">Sign up</span><span class="fa">ثبت‌نام</span></button>
+      <button class="active" data-authtype="signin"><span class="en">Sign in</span></button>
+      <button data-authtype="signup"><span class="en">Sign up</span></button>
     </div>
 
     <div class="field" id="authNameField" style="display:none;">
-      <label><span class="en">Name</span><span class="fa">نام</span></label>
+      <label><span class="en">Name</span></label>
       <input type="text" id="authNameInput" placeholder="Your name" autocomplete="off">
     </div>
     <div class="field">
-      <label><span class="en">Email</span><span class="fa">ایمیل</span></label>
+      <label><span class="en">Email</span></label>
       <input type="email" id="authEmailInput" placeholder="you@example.com" autocomplete="off">
     </div>
     <div class="field">
-      <label><span class="en">Password</span><span class="fa">رمز عبور</span></label>
+      <label><span class="en">Password</span></label>
       <input type="password" id="authPasswordInput" placeholder="••••••••" autocomplete="off">
     </div>
-    <div class="auth-error" id="authError"><span class="en">Please fill in a valid email and password.</span><span class="fa">لطفاً یک ایمیل و رمز عبور معتبر وارد کنید.</span></div>
+    <div class="auth-error" id="authError"><span class="en">Please fill in a valid email and password.</span></div>
 
-    <button class="btn btn-primary" id="authSubmitBtn"><span class="en">Sign in</span><span class="fa">ورود</span></button>
+    <button class="btn btn-primary" id="authSubmitBtn"><span class="en">Sign in</span></button>
 
     <p class="auth-note">
       <span class="en">Demo only — this doesn't create a real account. Any email and password will work, and nothing is stored beyond this browser session.</span>
-      <span class="fa">فقط نمایشی — حساب واقعی ساخته نمی‌شود. هر ایمیل و رمز عبوری کار می‌کند و چیزی فراتر از این نشست ذخیره نمی‌شود.</span>
+      
     </p>
   </div>
 </div>
 
 <div id="riderView" style="display:none;">
 <div class="intro">
-  <div class="kicker"><span class="en">WORKING PROTOTYPE</span><span class="fa">نمونه اولیه فعال</span></div>
-  <h1><span class="en">Book a SheDrives ride, right here.</span><span class="fa">همین‌جا یک سفر SheDrives رزرو کنید.</span></h1>
-  <p><span class="en">This runs the actual booking flow from the concept — request, price, pay, match, ride — using a simulated pink fleet and simulated chauffeurs.</span><span class="fa">این نسخه، مسیر واقعی رزرو در ایده را اجرا می‌کند — درخواست، قیمت، پرداخت، تطبیق، سفر — با ناوگان و راننده‌های شبیه‌سازی‌شده.</span></p>
+  <div class="kicker"><span class="en">WORKING PROTOTYPE</span></div>
+  <h1><span class="en">Book a SheDrives ride, right here.</span></h1>
+  <p><span class="en">This runs the actual booking flow from the concept — request, price, pay, match, ride — using a simulated pink fleet and simulated chauffeurs.</span></p>
 </div>
 
 <div class="stage">
@@ -523,7 +444,7 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
         </div>
         <div style="flex:1;">
-          <div class="rb-title"><span class="en">Ride reminder</span><span class="fa">یادآوری سفر</span></div>
+          <div class="rb-title"><span class="en">Ride reminder</span></div>
           <div class="rb-sub" id="reminderBannerText">—</div>
         </div>
         <button class="rb-close" id="reminderBannerClose">×</button>
@@ -532,23 +453,23 @@
       <!-- SCREEN: HOME -->
       <div class="screen active" data-screen="home">
         <div class="screen-head">
-          <div class="screen-title"><span class="en">Where to?</span><span class="fa">مقصد شما کجاست؟</span></div>
+          <div class="screen-title"><span class="en">Where to?</span></div>
           <button class="icon-btn" id="toHelpBtn" style="margin-inline-start:auto;" title="Help & support">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 1.8-2 3.5" /><circle cx="12" cy="16.5" r="0.6" fill="currentColor" stroke="none"/></svg>
           </button>
         </div>
 
         <div class="segmented" id="modeToggle" role="tablist">
-          <button class="active" data-mode="ondemand"><span class="en">Book now</span><span class="fa">رزرو فوری</span></button>
-          <button data-mode="hourly"><span class="en">Schedule a drive</span><span class="fa">زمان‌بندی سفر</span></button>
+          <button class="active" data-mode="ondemand"><span class="en">Book now</span></button>
+          <button data-mode="hourly"><span class="en">Schedule a drive</span></button>
         </div>
 
         <!-- on demand (book now) fields -->
         <div id="ondemandFields">
           <div class="stepper" style="margin-bottom:14px;">
             <div>
-              <div style="font-size:0.78rem; color:var(--graphite); font-weight:600;"><span class="en">How long do you need it?</span><span class="fa">به چه مدت زمانی نیاز دارید؟</span></div>
-              <div class="val"><span id="bnHoursVal">2</span> <span class="en">hours</span><span class="fa">ساعت</span></div>
+              <div style="font-size:0.78rem; color:var(--graphite); font-weight:600;"><span class="en">How long do you need it?</span></div>
+              <div class="val"><span id="bnHoursVal">2</span> <span class="en">hours</span></div>
             </div>
             <div style="display:flex; gap:8px;">
               <button id="bnHoursMinus" type="button">−</button>
@@ -556,42 +477,42 @@
             </div>
           </div>
           <div class="field">
-            <label><span class="en">Time of day</span><span class="fa">زمان روز</span></label>
+            <label><span class="en">Time of day</span></label>
             <input class="stop" id="bnTimeInput" type="time">
           </div>
           <div class="field stop-row">
             <div class="stop-dot"></div>
-            <label><span class="en">Location</span><span class="fa">مکان</span></label>
+            <label><span class="en">Location</span></label>
             <input class="stop" id="bnLocationInput" type="text" placeholder="Where do you need the driver?">
           </div>
           <div class="chip-row">
-            <button class="chip" data-fill-bn="Downtown"><span class="en">Downtown</span><span class="fa">مرکز شهر</span></button>
-            <button class="chip" data-fill-bn="Airport"><span class="en">Airport</span><span class="fa">فرودگاه</span></button>
-            <button class="chip" data-fill-bn="Uptown Hotel"><span class="en">Uptown Hotel</span><span class="fa">هتل بالای شهر</span></button>
+            <button class="chip" data-fill-bn="Downtown"><span class="en">Downtown</span></button>
+            <button class="chip" data-fill-bn="Airport"><span class="en">Airport</span></button>
+            <button class="chip" data-fill-bn="Uptown Hotel"><span class="en">Uptown Hotel</span></button>
           </div>
           <div style="font-size:0.78rem; color:var(--pink-deep); font-weight:600; margin-bottom:6px;" id="bnRateNote">
-            <span class="en">$100/hr · rate caps at 10 hours</span><span class="fa">۱۰۰ دلار در ساعت · سقف نرخ در ۱۰ ساعت</span>
+            <span class="en">$100/hr · rate caps at 10 hours</span>
           </div>
         </div>
 
         <!-- hourly fields -->
         <div id="hourlyFields" style="display:none;">
           <div id="scheduledRidesSection" style="display:none;">
-            <div class="section-label"><span class="en">Your scheduled rides</span><span class="fa">سفرهای زمان‌بندی‌شده شما</span></div>
+            <div class="section-label"><span class="en">Your scheduled rides</span></div>
             <div id="scheduledRidesList"></div>
             <div style="height:6px;"></div>
           </div>
 
           <div class="segmented" style="margin-bottom:14px;" id="schedTypeToggle">
-            <button class="active" data-schedtype="hourly"><span class="en">By the hour</span><span class="fa">ساعتی</span></button>
-            <button data-schedtype="daily"><span class="en">Full day</span><span class="fa">تمام روز</span></button>
+            <button class="active" data-schedtype="hourly"><span class="en">By the hour</span></button>
+            <button data-schedtype="daily"><span class="en">Full day</span></button>
           </div>
 
           <div id="schedHourlyOnly">
             <div class="stepper" style="margin-bottom:14px;">
               <div>
-                <div style="font-size:0.78rem; color:var(--graphite); font-weight:600;"><span class="en">How long do you need it?</span><span class="fa">به چه مدت زمانی نیاز دارید؟</span></div>
-                <div class="val"><span id="hoursVal">3</span> <span class="en">hours</span><span class="fa">ساعت</span></div>
+                <div style="font-size:0.78rem; color:var(--graphite); font-weight:600;"><span class="en">How long do you need it?</span></div>
+                <div class="val"><span id="hoursVal">3</span> <span class="en">hours</span></div>
               </div>
               <div style="display:flex; gap:8px;">
                 <button id="hoursMinus" type="button">−</button>
@@ -606,32 +527,32 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
               </div>
               <div>
-                <div class="ft"><span class="en">Full-day charter</span><span class="fa">چارتر تمام روز</span></div>
-                <div class="fs"><span class="en">One driver, one car, all day</span><span class="fa">یک راننده، یک خودرو، تمام روز</span></div>
+                <div class="ft"><span class="en">Full-day charter</span></div>
+                <div class="fs"><span class="en">One driver, one car, all day</span></div>
               </div>
             </div>
           </div>
 
           <div class="field">
-            <label><span class="en">Date</span><span class="fa">تاریخ</span></label>
+            <label><span class="en">Date</span></label>
             <input class="stop" id="schedDateInput" type="date">
           </div>
           <div class="field">
-            <label><span class="en">Time of day</span><span class="fa">زمان روز</span></label>
+            <label><span class="en">Time of day</span></label>
             <input class="stop" id="schedTimeInput" type="time">
           </div>
           <div class="field stop-row">
             <div class="stop-dot"></div>
-            <label><span class="en">Location</span><span class="fa">مکان</span></label>
+            <label><span class="en">Location</span></label>
             <input class="stop" id="hourlyPickupInput" type="text" placeholder="Where should your chauffeur start?">
           </div>
           <div class="chip-row">
-            <button class="chip" data-fill-sched="Downtown"><span class="en">Downtown</span><span class="fa">مرکز شهر</span></button>
-            <button class="chip" data-fill-sched="Airport"><span class="en">Airport</span><span class="fa">فرودگاه</span></button>
-            <button class="chip" data-fill-sched="Uptown Hotel"><span class="en">Uptown Hotel</span><span class="fa">هتل بالای شهر</span></button>
+            <button class="chip" data-fill-sched="Downtown"><span class="en">Downtown</span></button>
+            <button class="chip" data-fill-sched="Airport"><span class="en">Airport</span></button>
+            <button class="chip" data-fill-sched="Uptown Hotel"><span class="en">Uptown Hotel</span></button>
           </div>
           <div id="schedRateNote" style="font-size:0.78rem; color:var(--pink-deep); font-weight:600; margin-bottom:6px;">
-            <span class="en">$100/hr · rate caps at 10 hours</span><span class="fa">۱۰۰ دلار در ساعت · سقف نرخ در ۱۰ ساعت</span>
+            <span class="en">$100/hr · rate caps at 10 hours</span>
           </div>
         </div>
 
@@ -642,49 +563,49 @@
             <circle cx="92" cy="47" r="7" fill="#17131c"/>
           </svg>
           <div>
-            <div class="ft"><span class="en" id="fleetNameEn">Pink Fleet Sedan</span><span class="fa" id="fleetNameFa">سدان ناوگان صورتی</span></div>
-            <div class="fs"><span class="en" id="fleetSeatsEn">4 seats · white SheDrives wordmark</span><span class="fa" id="fleetSeatsFa">۴ صندلی · لوگوی سفید SheDrives</span></div>
+            <div class="ft"><span class="en" id="fleetNameEn">Pink Fleet Sedan</span></div>
+            <div class="fs"><span class="en" id="fleetSeatsEn">4 seats · white SheDrives wordmark</span></div>
           </div>
         </div>
 
         <div class="spacer"></div>
-        <button class="btn btn-primary" id="toPriceBtn"><span class="en">See price</span><span class="fa">مشاهده قیمت</span></button>
+        <button class="btn btn-primary" id="toPriceBtn"><span class="en">See price</span></button>
       </div>
 
       <!-- SCREEN: PRICE -->
       <div class="screen" data-screen="price">
         <div class="screen-head">
           <button class="icon-btn" data-back="home">←</button>
-          <div class="screen-title"><span class="en">Confirm your trip</span><span class="fa">تایید سفر</span></div>
+          <div class="screen-title"><span class="en">Confirm your trip</span></div>
         </div>
 
         <div class="route-mini" id="routeMini"></div>
 
         <div class="price-card">
-          <div class="price-row"><span><span class="en">Base fare</span><span class="fa">کرایه پایه</span></span><span id="priceBase">$0</span></div>
-          <div class="price-row" id="priceDistRow"><span><span class="en">Booked for</span><span class="fa">مدت رزرو</span></span><span id="priceDist">—</span></div>
-          <div class="price-row" id="priceDiscountRow" style="display:none; color:var(--green);"><span><span class="en">Multi-hour discount</span><span class="fa">تخفیف چند ساعته</span></span><span id="priceDiscount">−$0</span></div>
-          <div class="price-row"><span><span class="en">Service fee</span><span class="fa">هزینه خدمات</span></span><span id="priceFee">$0</span></div>
-          <div class="price-row total"><span><span class="en">Total</span><span class="fa">مجموع</span></span><span id="priceTotal">$0</span></div>
+          <div class="price-row"><span><span class="en">Base fare</span></span><span id="priceBase">$0</span></div>
+          <div class="price-row" id="priceDistRow"><span><span class="en">Booked for</span></span><span id="priceDist">—</span></div>
+          <div class="price-row" id="priceDiscountRow" style="display:none; color:var(--green);"><span><span class="en">Multi-hour discount</span></span><span id="priceDiscount">−$0</span></div>
+          <div class="price-row"><span><span class="en">Service fee</span></span><span id="priceFee">$0</span></div>
+          <div class="price-row total"><span><span class="en">Total</span></span><span id="priceTotal">$0</span></div>
         </div>
 
         <div class="spacer"></div>
-        <button class="btn btn-primary" id="toPayBtn"><span class="en">Confirm & pay</span><span class="fa">تایید و پرداخت</span></button>
+        <button class="btn btn-primary" id="toPayBtn"><span class="en">Confirm & pay</span></button>
       </div>
 
       <!-- SCREEN: PAY -->
       <div class="screen" data-screen="pay">
         <div class="screen-head">
           <button class="icon-btn" data-back="price">←</button>
-          <div class="screen-title"><span class="en">Pay in-app</span><span class="fa">پرداخت داخل اپ</span></div>
+          <div class="screen-title"><span class="en">Pay in-app</span></div>
         </div>
 
         <div class="pay-methods">
           <div class="pay-method selected" data-pay="card" id="cardPayMethod">
             <div style="width:34px;height:24px;border-radius:5px;background:var(--ink);"></div>
             <div>
-              <div class="pm-name" id="cardPayName"><span class="en">Card •••• 4471</span><span class="fa">کارت •••• ۴۴۷۱</span></div>
-              <div class="pm-sub" id="cardPaySub"><span class="en">Visa</span><span class="fa">ویزا</span></div>
+              <div class="pm-name" id="cardPayName"><span class="en">Card •••• 4471</span></div>
+              <div class="pm-sub" id="cardPaySub"><span class="en">Visa</span></div>
             </div>
             <div class="radio"></div>
           </div>
@@ -692,7 +613,7 @@
             <div style="width:34px;height:24px;border-radius:5px;background:#fff; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:0.6rem; font-weight:800;"></div>
             <div>
               <div class="pm-name">Apple Pay</div>
-              <div class="pm-sub"><span class="en">Face ID to confirm</span><span class="fa">تایید با Face ID</span></div>
+              <div class="pm-sub"><span class="en">Face ID to confirm</span></div>
             </div>
             <div class="radio"></div>
           </div>
@@ -701,55 +622,55 @@
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12h3"/></svg>
             </div>
             <div>
-              <div class="pm-name"><span class="en">Wallet</span><span class="fa">کیف پول</span></div>
-              <div class="pm-sub" id="walletPaySub"><span class="en">$0.00 available</span><span class="fa">۰٫۰۰ دلار موجودی</span></div>
+              <div class="pm-name"><span class="en">Wallet</span></div>
+              <div class="pm-sub" id="walletPaySub"><span class="en">$0.00 available</span></div>
             </div>
             <div class="radio" id="walletRadio"></div>
             <div class="applied-badge" id="walletAppliedBadge">
-              <span class="en">Applied</span><span class="fa">اعمال شد</span>
+              <span class="en">Applied</span>
             </div>
           </div>
         </div>
-        <div class="auth-error" id="walletError" style="margin-top:-10px;"><span class="en">Not enough wallet balance — add funds in your profile.</span><span class="fa">موجودی کیف پول کافی نیست — از پروفایل خود شارژ کنید.</span></div>
-        <div class="auth-error" id="remainingMethodError" style="margin-top:-10px;"><span class="en">Please choose a payment method for the remaining balance.</span><span class="fa">لطفاً برای باقی‌مانده، روش پرداختی انتخاب کنید.</span></div>
+        <div class="auth-error" id="walletError" style="margin-top:-10px;"><span class="en">Not enough wallet balance — add funds in your profile.</span></div>
+        <div class="auth-error" id="remainingMethodError" style="margin-top:-10px;"><span class="en">Please choose a payment method for the remaining balance.</span></div>
 
         <div class="price-card">
           <div class="price-row" id="payWalletAppliedRow" style="display:none; color:var(--green);">
-            <span><span class="en">Wallet applied</span><span class="fa">اعمال‌شده از کیف پول</span></span>
+            <span><span class="en">Wallet applied</span></span>
             <span id="payWalletApplied">-$0.00</span>
           </div>
-          <div class="price-row total"><span id="payAmountLabel"><span class="en">Amount</span><span class="fa">مبلغ</span></span><span id="payAmount">$0</span></div>
+          <div class="price-row total"><span id="payAmountLabel"><span class="en">Amount</span></span><span id="payAmount">$0</span></div>
         </div>
 
         <div class="spacer"></div>
-        <button class="btn btn-primary" id="payBtn"><span class="en">Pay now</span><span class="fa">پرداخت</span></button>
+        <button class="btn btn-primary" id="payBtn"><span class="en">Pay now</span></button>
       </div>
 
       <!-- SCREEN: SCHEDULED CONFIRMATION -->
       <div class="screen" data-screen="schedConfirm">
         <div class="screen-head" style="justify-content:center;">
-          <div class="screen-title"><span class="en">Ride scheduled</span><span class="fa">سفر زمان‌بندی شد</span></div>
+          <div class="screen-title"><span class="en">Ride scheduled</span></div>
         </div>
 
         <div class="receipt-badge">
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12.5l5 5L20 6.5"/></svg>
         </div>
         <div class="receipt-title serif"><span id="schedConfirmDate">—</span></div>
-        <div class="receipt-sub"><span class="en">You're all set</span><span class="fa">همه چیز آماده است</span></div>
+        <div class="receipt-sub"><span class="en">You're all set</span></div>
 
         <div class="price-card">
-          <div class="price-row"><span><span class="en">Location</span><span class="fa">مکان</span></span><span id="schedConfirmLoc">—</span></div>
-          <div class="price-row"><span><span class="en">Details</span><span class="fa">جزئیات</span></span><span id="schedConfirmMeta">—</span></div>
-          <div class="price-row total"><span><span class="en">Total</span><span class="fa">مجموع</span></span><span id="schedConfirmTotal">$0</span></div>
+          <div class="price-row"><span><span class="en">Location</span></span><span id="schedConfirmLoc">—</span></div>
+          <div class="price-row"><span><span class="en">Details</span></span><span id="schedConfirmMeta">—</span></div>
+          <div class="price-row total"><span><span class="en">Total</span></span><span id="schedConfirmTotal">$0</span></div>
         </div>
 
         <div class="help-response-note">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
-          <span><span class="en">We'll send a reminder 2 hours before your ride. (Demo: shown as an in-app/browser notification, not a real text or email — see note in Scheduled rides.)</span><span class="fa">۲ ساعت قبل از سفرتان یادآوری ارسال می‌شود. (نسخه نمایشی: به‌صورت اعلان درون‌برنامه‌ای، نه پیامک یا ایمیل واقعی)</span></span>
+          <span><span class="en">We'll send a reminder 2 hours before your ride. (Demo: shown as an in-app/browser notification, not a real text or email — see note in Scheduled rides.)</span></span>
         </div>
 
         <div class="spacer"></div>
-        <button class="btn btn-primary" id="schedConfirmDoneBtn"><span class="en">Done</span><span class="fa">تمام</span></button>
+        <button class="btn btn-primary" id="schedConfirmDoneBtn"><span class="en">Done</span></button>
       </div>
 
       <!-- SCREEN: MATCHING -->
@@ -760,15 +681,15 @@
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2A2 2 0 0 1 19.5 8L21 13v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><circle cx="7" cy="16" r="1.4"/><circle cx="17" cy="16" r="1.4"/></svg>
             </div>
           </div>
-          <div class="matching-title"><span class="en">Finding your chauffeur…</span><span class="fa">در حال یافتن راننده…</span></div>
-          <div class="matching-sub"><span class="en">Matching you with the nearest pink fleet car</span><span class="fa">اتصال به نزدیک‌ترین خودروی ناوگان صورتی</span></div>
+          <div class="matching-title"><span class="en">Finding your chauffeur…</span></div>
+          <div class="matching-sub"><span class="en">Matching you with the nearest pink fleet car</span></div>
         </div>
       </div>
 
       <!-- SCREEN: DRIVER -->
       <div class="screen" data-screen="driver">
         <div class="screen-head">
-          <div class="screen-title"><span class="en">Driver matched</span><span class="fa">راننده مشخص شد</span></div>
+          <div class="screen-title"><span class="en">Driver matched</span></div>
         </div>
 
         <div class="driver-card">
@@ -790,18 +711,18 @@
         </div>
 
         <div class="eta-row">
-          <span><span class="en">Arriving in</span><span class="fa">زمان رسیدن</span> <strong id="etaMinutes">4</strong> <span class="en">min</span><span class="fa">دقیقه</span></span>
+          <span><span class="en">Arriving in</span> <strong id="etaMinutes">4</strong> <span class="en">min</span></span>
           <span id="driverRating">★ 4.9</span>
         </div>
 
         <div class="spacer"></div>
-        <button class="btn btn-primary" id="startRideBtn"><span class="en">Start ride</span><span class="fa">شروع سفر</span></button>
+        <button class="btn btn-primary" id="startRideBtn"><span class="en">Start ride</span></button>
       </div>
 
       <!-- SCREEN: RIDE -->
       <div class="screen" data-screen="ride">
         <div class="screen-head">
-          <div class="screen-title"><span class="en">On the way</span><span class="fa">در مسیر</span></div>
+          <div class="screen-title"><span class="en">On the way</span></div>
         </div>
 
         <div class="map-mock">
@@ -815,34 +736,34 @@
 
         <div class="progress-track"><div class="progress-fill" id="rideProgress"></div></div>
         <div class="eta-row">
-          <span id="rideStatus"><span class="en">Heading to drop-off</span><span class="fa">در مسیر مقصد</span></span>
+          <span id="rideStatus"><span class="en">Heading to drop-off</span></span>
           <span id="rideEta">—</span>
         </div>
 
         <div class="spacer"></div>
-        <div class="foot-note"><span class="en">Simulated ride in progress — this ends automatically.</span><span class="fa">سفر شبیه‌سازی‌شده در حال انجام — به‌صورت خودکار پایان می‌یابد.</span></div>
+        <div class="foot-note"><span class="en">Simulated ride in progress — this ends automatically.</span></div>
       </div>
 
       <!-- SCREEN: RECEIPT -->
       <div class="screen" data-screen="receipt">
         <div class="screen-head" style="justify-content:center;">
-          <div class="screen-title"><span class="en">Trip complete</span><span class="fa">سفر پایان یافت</span></div>
+          <div class="screen-title"><span class="en">Trip complete</span></div>
         </div>
 
         <div class="receipt-badge">
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12.5l5 5L20 6.5"/></svg>
         </div>
         <div class="receipt-title serif"><span id="receiptTotal">$0</span></div>
-        <div class="receipt-sub" id="receiptMeta"><span class="en">Paid via card</span><span class="fa">پرداخت با کارت</span></div>
+        <div class="receipt-sub" id="receiptMeta"><span class="en">Paid via card</span></div>
 
         <div class="price-card">
-          <div class="price-row"><span><span class="en">Driver</span><span class="fa">راننده</span></span><span id="receiptDriver">—</span></div>
-          <div class="price-row"><span><span class="en">Location</span><span class="fa">مکان</span></span><span id="receiptDist">—</span></div>
-          <div class="price-row"><span><span class="en">Duration</span><span class="fa">مدت زمان</span></span><span id="receiptDur">—</span></div>
+          <div class="price-row"><span><span class="en">Driver</span></span><span id="receiptDriver">—</span></div>
+          <div class="price-row"><span><span class="en">Location</span></span><span id="receiptDist">—</span></div>
+          <div class="price-row"><span><span class="en">Duration</span></span><span id="receiptDur">—</span></div>
         </div>
 
         <div style="text-align:center; font-size:0.85rem; color:var(--graphite); margin-bottom:10px;">
-          <span class="en">Rate your chauffeur</span><span class="fa">به راننده امتیاز دهید</span>
+          <span class="en">Rate your chauffeur</span>
         </div>
         <div class="stars" id="starsRow">
           <svg class="star" data-v="1" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01z"/></svg>
@@ -853,14 +774,14 @@
         </div>
 
         <div class="spacer"></div>
-        <button class="btn btn-primary" id="doneBtn"><span class="en">Book another ride</span><span class="fa">رزرو سفر دیگر</span></button>
+        <button class="btn btn-primary" id="doneBtn"><span class="en">Book another ride</span></button>
       </div>
 
       <!-- SCREEN: PROFILE -->
       <div class="screen" data-screen="profile">
         <div class="screen-head">
           <button class="icon-btn" data-back="home">←</button>
-          <div class="screen-title"><span class="en">Profile</span><span class="fa">پروفایل</span></div>
+          <div class="screen-title"><span class="en">Profile</span></div>
         </div>
 
         <div class="profile-avatar-wrap">
@@ -868,12 +789,12 @@
           <input type="file" id="profilePhotoInput" accept="image/*" style="display:none;">
           <button class="avatar-edit-btn" id="profilePhotoBtn">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h3l2-2h6l2 2h3v12H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
-            <span class="en">Change photo (optional)</span><span class="fa">تغییر عکس (اختیاری)</span>
+            <span class="en">Change photo (optional)</span>
           </button>
         </div>
 
         <div class="wallet-card">
-          <div class="w-label"><span class="en">Wallet balance</span><span class="fa">موجودی کیف پول</span></div>
+          <div class="w-label"><span class="en">Wallet balance</span></div>
           <div class="w-balance" id="profileWalletBalance">$0.00</div>
           <div class="wallet-chips">
             <button type="button" data-add-funds="50">+$50</button>
@@ -882,27 +803,27 @@
           </div>
         </div>
 
-        <div class="section-label"><span class="en">Payment methods</span><span class="fa">روش‌های پرداخت</span></div>
+        <div class="section-label"><span class="en">Payment methods</span></div>
         <div id="cardList" style="border:1px solid var(--line); border-radius:14px; padding:0 14px; margin-bottom:14px;"></div>
         <div class="driver-add" style="margin-top:0; margin-bottom:24px;">
           <input type="text" id="newCardInput" placeholder="Card number" inputmode="numeric" maxlength="23">
-          <button class="btn btn-secondary" id="addCardBtn" style="width:auto; padding:10px 18px;"><span class="en">Add</span><span class="fa">افزودن</span></button>
+          <button class="btn btn-secondary" id="addCardBtn" style="width:auto; padding:10px 18px;"><span class="en">Add</span></button>
         </div>
 
         <div class="field">
-          <label><span class="en">Name</span><span class="fa">نام</span></label>
+          <label><span class="en">Name</span></label>
           <input type="text" id="profileNameInput" placeholder="Your name">
         </div>
         <div class="field">
-          <label><span class="en">Email</span><span class="fa">ایمیل</span></label>
+          <label><span class="en">Email</span></label>
           <input type="email" id="profileEmailInput" placeholder="you@example.com">
         </div>
         <div class="field">
-          <label><span class="en">Phone number</span><span class="fa">شماره تلفن</span></label>
+          <label><span class="en">Phone number</span></label>
           <input type="tel" id="profilePhoneInput" placeholder="(555) 555-0100">
         </div>
         <div class="field">
-          <label><span class="en">Gender</span><span class="fa">جنسیت</span></label>
+          <label><span class="en">Gender</span></label>
           <select id="profileGenderInput">
             <option value=""></option>
             <option value="female">Female</option>
@@ -913,12 +834,12 @@
         </div>
 
         <div class="spacer"></div>
-        <button class="btn btn-primary" id="profileSaveBtn"><span class="en">Save changes</span><span class="fa">ذخیره تغییرات</span></button>
-        <div class="profile-saved" id="profileSaved"><span class="en">Saved ✓</span><span class="fa">ذخیره شد ✓</span></div>
+        <button class="btn btn-primary" id="profileSaveBtn"><span class="en">Save changes</span></button>
+        <div class="profile-saved" id="profileSaved"><span class="en">Saved ✓</span></div>
 
         <button class="btn btn-secondary" id="toHistoryBtn" style="margin-top:14px;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-          <span class="en">Ride history</span><span class="fa">تاریخچه سفرها</span>
+          <span class="en">Ride history</span>
         </button>
       </div>
 
@@ -926,7 +847,7 @@
       <div class="screen" data-screen="history">
         <div class="screen-head">
           <button class="icon-btn" data-back="profile">←</button>
-          <div class="screen-title"><span class="en">Ride history</span><span class="fa">تاریخچه سفرها</span></div>
+          <div class="screen-title"><span class="en">Ride history</span></div>
         </div>
 
         <div id="historyList"></div>
@@ -936,12 +857,12 @@
       <div class="screen" data-screen="help">
         <div class="screen-head">
           <button class="icon-btn" data-back="home">←</button>
-          <div class="screen-title"><span class="en">Help & support</span><span class="fa">راهنما و پشتیبانی</span></div>
+          <div class="screen-title"><span class="en">Help & support</span></div>
         </div>
 
         <p style="color:var(--graphite); font-size:0.9rem; line-height:1.55; margin:0 0 18px;">
           <span class="en">Have a complaint or ran into an issue with a ride? Send us the details below.</span>
-          <span class="fa">شکایتی دارید یا در سفر خود با مشکلی مواجه شدید؟ جزئیات را در پایین ارسال کنید.</span>
+          
         </p>
 
         <a class="help-email-card" id="helpEmailLink" href="mailto:support@shedrives.com">
@@ -949,28 +870,28 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
           </div>
           <div>
-            <div class="he-label"><span class="en">Or email us directly</span><span class="fa">یا مستقیم ایمیل بزنید</span></div>
+            <div class="he-label"><span class="en">Or email us directly</span></div>
             <div class="he-email">support@shedrives.com</div>
           </div>
         </a>
 
         <div class="field">
-          <label><span class="en">Subject</span><span class="fa">موضوع</span></label>
+          <label><span class="en">Subject</span></label>
           <input type="text" id="helpSubjectInput" placeholder="What's this about?">
         </div>
         <div class="field">
-          <label><span class="en">Message</span><span class="fa">پیام</span></label>
+          <label><span class="en">Message</span></label>
           <textarea id="helpMessageInput" placeholder="Tell us what happened…"></textarea>
         </div>
-        <div class="auth-error" id="helpError"><span class="en">Please enter a message before sending.</span><span class="fa">لطفاً قبل از ارسال، پیامی بنویسید.</span></div>
+        <div class="auth-error" id="helpError"><span class="en">Please enter a message before sending.</span></div>
 
         <div class="spacer"></div>
-        <button class="btn btn-primary" id="helpSendBtn"><span class="en">Send to support</span><span class="fa">ارسال به پشتیبانی</span></button>
-        <div class="help-sent-note" id="helpSentNote"><span class="en">Your email app should now be open with your message ready to send.</span><span class="fa">اپ ایمیل شما باید اکنون با پیام آماده برای ارسال باز شده باشد.</span></div>
+        <button class="btn btn-primary" id="helpSendBtn"><span class="en">Send to support</span></button>
+        <div class="help-sent-note" id="helpSentNote"><span class="en">Your email app should now be open with your message ready to send.</span></div>
 
         <div class="help-response-note">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-          <span><span class="en">We typically get back to you regarding your complaint within 2–3 business days.</span><span class="fa">ما معمولاً ظرف ۲ تا ۳ روز کاری به شکایت شما پاسخ می‌دهیم.</span></span>
+          <span><span class="en">We typically get back to you regarding your complaint within 2–3 business days.</span></span>
         </div>
       </div>
 
@@ -980,91 +901,10 @@
 
 <div class="foot-note" style="margin-bottom:40px;">
   <span class="en">Prices, drivers, and locations here are simulated for demo purposes and reset on reload.</span>
-  <span class="fa">قیمت‌ها، رانندگان و موقعیت‌ها در این نسخه شبیه‌سازی‌شده و صرفاً برای نمایش هستند.</span>
+  
 </div>
 </div><!-- /riderView -->
 
-<!-- ADMIN DASHBOARD -->
-<div class="admin-wrap" id="adminView">
-  <div class="admin-head">
-    <h1><span class="en">Admin</span><span class="fa">پنل مدیریت</span></h1>
-    <button class="admin-badge" id="adminLogoutBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
-      <span class="en">Back to app</span><span class="fa">بازگشت به اپ</span>
-    </button>
-  </div>
-  <p class="admin-note">
-    <span class="en">Changes here update pricing, fleet, and drivers for this browser session only — this is a front-end prototype with no backend, so nothing is saved permanently and there's no real access control behind the password.</span>
-    <span class="fa">تغییرات اینجا فقط برای همین نشست مرورگر اعمال می‌شوند — این یک نمونه اولیه بدون بک‌اند است، پس چیزی به‌صورت دائمی ذخیره نمی‌شود.</span>
-  </p>
-
-  <div class="admin-section">
-    <h2><span class="en">Pricing</span><span class="fa">قیمت‌گذاری</span></h2>
-    <p class="sec-sub"><span class="en">Controls both Book now and the hourly side of Schedule a drive.</span><span class="fa">هم روی «رزرو فوری» و هم بخش ساعتی «زمان‌بندی سفر» اثر می‌گذارد.</span></p>
-    <div class="admin-grid">
-      <div class="admin-field">
-        <label><span class="en">Hourly rate ($)</span><span class="fa">نرخ ساعتی ($)</span></label>
-        <input type="number" id="setHourlyRate" min="1" step="1">
-      </div>
-      <div class="admin-field">
-        <label><span class="en">Full-day rate (CAD)</span><span class="fa">نرخ تمام روز (CAD)</span></label>
-        <input type="number" id="setDailyRate" min="1" step="1">
-      </div>
-      <div class="admin-field">
-        <label><span class="en">Rate cap (hours)</span><span class="fa">سقف نرخ (ساعت)</span></label>
-        <input type="number" id="setRateCapHours" min="1" step="1">
-        <div class="hint"><span class="en">Bookings at or above this many hours all cost the same.</span><span class="fa">رزروهایی با این تعداد ساعت یا بیشتر، هزینه یکسانی دارند.</span></div>
-      </div>
-      <div class="admin-field">
-        <label><span class="en">Max bookable hours</span><span class="fa">حداکثر ساعت قابل رزرو</span></label>
-        <input type="number" id="setMaxHours" min="1" step="1">
-      </div>
-      <div class="admin-field">
-        <label><span class="en">Discount per hour (%)</span><span class="fa">تخفیف به ازای هر ساعت (٪)</span></label>
-        <input type="number" id="setDiscountStep" min="0" step="0.5">
-      </div>
-      <div class="admin-field">
-        <label><span class="en">Max discount (%)</span><span class="fa">حداکثر تخفیف (٪)</span></label>
-        <input type="number" id="setMaxDiscount" min="0" max="100" step="1">
-      </div>
-      <div class="admin-field">
-        <label><span class="en">Service fee ($)</span><span class="fa">هزینه خدمات ($)</span></label>
-        <input type="number" id="setServiceFee" min="0" step="0.5">
-      </div>
-    </div>
-  </div>
-
-  <div class="admin-section">
-    <h2><span class="en">Fleet</span><span class="fa">ناوگان</span></h2>
-    <p class="sec-sub"><span class="en">Shown on the booking screen.</span><span class="fa">در صفحه رزرو نمایش داده می‌شود.</span></p>
-    <div class="admin-grid">
-      <div class="admin-field">
-        <label><span class="en">Vehicle name</span><span class="fa">نام خودرو</span></label>
-        <input type="text" id="setFleetName">
-      </div>
-      <div class="admin-field">
-        <label><span class="en">Subtitle</span><span class="fa">زیرعنوان</span></label>
-        <input type="text" id="setFleetSeats">
-      </div>
-    </div>
-  </div>
-
-  <div class="admin-section">
-    <h2><span class="en">Drivers</span><span class="fa">رانندگان</span></h2>
-    <p class="sec-sub"><span class="en">The pool riders are matched with after payment.</span><span class="fa">استخری که مسافران پس از پرداخت با آن تطبیق داده می‌شوند.</span></p>
-    <div id="driverList"></div>
-    <div class="driver-add">
-      <input type="text" id="newDriverName" placeholder="Driver name">
-      <button class="btn btn-secondary" id="addDriverBtn" style="width:auto; padding:10px 18px;"><span class="en">Add</span><span class="fa">افزودن</span></button>
-    </div>
-  </div>
-
-  <div class="admin-actions">
-    <button class="btn btn-primary" id="saveSettingsBtn" style="width:auto;"><span class="en">Save changes</span><span class="fa">ذخیره تغییرات</span></button>
-    <button class="btn btn-secondary" id="resetSettingsBtn" style="width:auto;"><span class="en">Reset to defaults</span><span class="fa">بازگشت به پیش‌فرض</span></button>
-    <span class="save-toast" id="saveToast"><span class="en">Saved ✓</span><span class="fa">ذخیره شد ✓</span></span>
-  </div>
-</div>
 
 <!--
   SUPABASE CLIENT LIBRARY
@@ -1094,27 +934,6 @@
 
   function pad2(n){ n = Math.floor(n); return (n < 10 ? '0' : '') + n; }
 
-  // ---------- language ----------
-  const langToggle = document.getElementById('langToggle');
-  langToggle.addEventListener('click', (e) => {
-    const btn = e.target.closest('button'); if(!btn) return;
-    const lang = btn.dataset.lang;
-    langToggle.querySelectorAll('button').forEach(b => b.classList.toggle('active', b===btn));
-    if(lang==='fa'){
-      document.documentElement.classList.add('fa');
-      document.documentElement.setAttribute('dir','rtl');
-      document.documentElement.setAttribute('lang','fa');
-    } else {
-      document.documentElement.classList.remove('fa');
-      document.documentElement.setAttribute('dir','ltr');
-      document.documentElement.setAttribute('lang','en');
-    }
-    renderRoute();
-    updateGenderOptions();
-    if(state.mode === 'hourly') renderScheduledRides();
-    if(state.user && document.querySelector('.screen[data-screen="history"]').classList.contains('active')) renderHistoryList();
-  });
-
   // ---------- clock ----------
   function tickClock(){
     const d = new Date();
@@ -1136,14 +955,13 @@
     walletApplied: 0,
     pendingWalletBalance: 0,
     driver: null,
-    isAdmin: false,
     user: null,
     authMode: 'signin',
     stack: ['home']
   };
 
-  // ---------- admin-editable settings ----------
-  const ADMIN_PASSWORD = 'shedrives2026'; // demo-only gate, not real security — visible to anyone who views source
+  // ---------- pricing / fleet settings (currently defaults; wired to Supabase's
+  // app_settings table so these can be edited there instead of in-app) ----------
   const DEFAULT_SETTINGS = {
     hourlyRate: 100,
     dailyRate: 2000,
@@ -1158,11 +976,11 @@
   const settings = Object.assign({}, DEFAULT_SETTINGS);
 
   const DEFAULT_DRIVERS = [
-    {en:'Sara M.', fa:'سارا م.', initial:'S'},
-    {en:'Amir K.', fa:'امیر ک.', initial:'A'},
-    {en:'Leila R.', fa:'لیلا ر.', initial:'L'},
-    {en:'Daniel P.', fa:'دنیل پ.', initial:'D'},
-    {en:'Niloofar H.', fa:'نیلوفر ح.', initial:'N'}
+    {en:'Sara M.', initial:'S'},
+    {en:'Amir K.', initial:'A'},
+    {en:'Leila R.', initial:'L'},
+    {en:'Daniel P.', initial:'D'},
+    {en:'Niloofar H.', initial:'N'}
   ];
   let DRIVERS = DEFAULT_DRIVERS.map(d => Object.assign({}, d));
 
@@ -1199,16 +1017,14 @@
 
   document.querySelectorAll('[data-fill-bn]').forEach(c=>{
     c.addEventListener('click', ()=>{
-      const isFa = document.documentElement.classList.contains('fa');
-      const label = c.querySelector(isFa ? '.fa' : '.en');
+      const label = c.querySelector('.en');
       document.getElementById('bnLocationInput').value = (label ? label.textContent : c.textContent).trim();
     });
   });
 
   document.querySelectorAll('[data-fill-sched]').forEach(c=>{
     c.addEventListener('click', ()=>{
-      const isFa = document.documentElement.classList.contains('fa');
-      const label = c.querySelector(isFa ? '.fa' : '.en');
+      const label = c.querySelector('.en');
       document.getElementById('hourlyPickupInput').value = (label ? label.textContent : c.textContent).trim();
     });
   });
@@ -1261,11 +1077,10 @@
     return h12 + ':' + pad2(m) + ' ' + period;
   }
 
-  function formatDate(iso, isFa){
+  function formatDate(iso){
     if(!iso) return '';
     const d = new Date(iso + 'T00:00:00');
-    const locale = isFa ? 'fa-IR-u-ca-gregory' : 'en-US';
-    return d.toLocaleDateString(locale, { weekday:'short', month:'short', day:'numeric' });
+    return d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
   }
 
   // hourly rate drops as booked duration grows, capped at settings.maxDiscountPct;
@@ -1331,24 +1146,23 @@
 
   function renderRoute(){
     const mini = document.getElementById('routeMini');
-    const isFa = document.documentElement.classList.contains('fa');
-    const hoursLabel = isFa ? 'ساعت' : 'hours';
+    const hoursLabel = 'hours';
     if(state.mode === 'ondemand'){
       mini.innerHTML = `
         <div class="r"><span class="rd"></span><span>${escapeHtml(state.pickup)}</span></div>
         <div class="rl"></div>
         <div class="r"><span class="rd sq"></span><span>${state.bnHours} ${hoursLabel} · ${formatTime(state.time)}</span></div>`;
     } else if(state.schedType === 'daily'){
-      const dayLabel = isFa ? 'تمام روز' : 'Full day';
+      const dayLabel = 'Full day';
       mini.innerHTML = `
         <div class="r"><span class="rd"></span><span>${escapeHtml(state.pickup)}</span></div>
         <div class="rl"></div>
-        <div class="r"><span class="rd sq"></span><span>${dayLabel} · ${formatDate(state.date, isFa)}, ${formatTime(state.time)}</span></div>`;
+        <div class="r"><span class="rd sq"></span><span>${dayLabel} · ${formatDate(state.date)}, ${formatTime(state.time)}</span></div>`;
     } else {
       mini.innerHTML = `
         <div class="r"><span class="rd"></span><span>${escapeHtml(state.pickup)}</span></div>
         <div class="rl"></div>
-        <div class="r"><span class="rd sq"></span><span>${state.hours} ${hoursLabel} · ${formatDate(state.date, isFa)}, ${formatTime(state.time)}</span></div>`;
+        <div class="r"><span class="rd sq"></span><span>${state.hours} ${hoursLabel} · ${formatDate(state.date)}, ${formatTime(state.time)}</span></div>`;
     }
   }
 
@@ -1373,14 +1187,13 @@
     }
 
     const distRow = document.getElementById('priceDistRow');
-    const isFa = document.documentElement.classList.contains('fa');
     distRow.style.display = '';
     if(state.mode === 'ondemand'){
-      document.getElementById('priceDist').textContent = state.bnHours + (isFa?' ساعت':' hours') + ' · ' + formatTime(state.time);
+      document.getElementById('priceDist').textContent = state.bnHours + ' hours · ' + formatTime(state.time);
     } else if(state.schedType === 'daily'){
-      document.getElementById('priceDist').textContent = (isFa?'تمام روز':'Full day') + ' · ' + formatDate(state.date, isFa) + ', ' + formatTime(state.time);
+      document.getElementById('priceDist').textContent = 'Full day · ' + formatDate(state.date) + ', ' + formatTime(state.time);
     } else {
-      document.getElementById('priceDist').textContent = state.hours + (isFa?' ساعت':' hours') + ' · ' + formatDate(state.date, isFa) + ', ' + formatTime(state.time);
+      document.getElementById('priceDist').textContent = state.hours + ' hours · ' + formatDate(state.date) + ', ' + formatTime(state.time);
     }
 
     renderRoute();
@@ -1398,15 +1211,11 @@
 
   function openPartialWalletModal(balance){
     state.pendingWalletBalance = balance;
-    const isFa = document.documentElement.classList.contains('fa');
     const remaining = state.fareTotal - balance;
     const textEn = 'Your wallet has ' + fmt$(balance) + ', which doesn\'t fully cover this ' +
       fmt$(state.fareTotal, state.currencySuffix) + ' ride. Apply it and pay the remaining ' +
       fmt$(remaining, state.currencySuffix) + ' with another method?';
-    const textFa = 'کیف پول شما ' + fmt$(balance) + ' موجودی دارد که کل مبلغ ' +
-      fmt$(state.fareTotal, state.currencySuffix) + ' را پوشش نمی‌دهد. آن را اعمال کرده و باقی‌مانده ' +
-      fmt$(remaining, state.currencySuffix) + ' را با روش دیگری پرداخت می‌کنید؟';
-    document.getElementById('partialWalletText').textContent = isFa ? textFa : textEn;
+    document.getElementById('partialWalletText').textContent = textEn;
     document.getElementById('partialWalletModal').classList.add('open');
   }
 
@@ -1419,7 +1228,7 @@
     document.getElementById('walletPayMethod').classList.remove('selected');
     document.getElementById('payWalletAppliedRow').style.display = '';
     document.getElementById('payWalletApplied').textContent = '-' + fmt$(balance, state.currencySuffix);
-    document.getElementById('payAmountLabel').innerHTML = '<span class="en">Remaining due</span><span class="fa">باقی‌مانده</span>';
+    document.getElementById('payAmountLabel').innerHTML = '<span class="en">Remaining due</span>';
     document.getElementById('payAmount').textContent = fmt$(remaining, state.currencySuffix);
 
     state.payMethod = null;
@@ -1437,7 +1246,7 @@
     const appliedRow = document.getElementById('payWalletAppliedRow');
     if(appliedRow) appliedRow.style.display = 'none';
     const label = document.getElementById('payAmountLabel');
-    if(label) label.innerHTML = '<span class="en">Amount</span><span class="fa">مبلغ</span>';
+    if(label) label.innerHTML = '<span class="en">Amount</span>';
     const amountEl = document.getElementById('payAmount');
     if(amountEl) amountEl.textContent = fmt$(state.fareTotal, state.currencySuffix);
   }
@@ -1510,7 +1319,7 @@
       state.driver = {d, plate, eta, rating};
 
       document.getElementById('driverInitial').textContent = d.initial;
-      document.getElementById('driverName').innerHTML = `<span class="en">${d.en}</span><span class="fa">${d.fa}</span>`;
+      document.getElementById('driverName').innerHTML = `<span class="en">${d.en}</span>`;
       document.getElementById('driverMeta').textContent = settings.fleetName;
       document.getElementById('driverPlate').textContent = plate;
       document.getElementById('etaMinutes').textContent = eta;
@@ -1544,35 +1353,29 @@
       // build receipt
       document.getElementById('receiptTotal').textContent = fmt$(state.fareTotal, state.currencySuffix);
       const methodLabels = {
-        card: ['Paid via card', 'پرداخت با کارت'],
-        apple: ['Paid via Apple Pay', 'پرداخت با Apple Pay'],
-        wallet: ['Paid via wallet', 'پرداخت با کیف پول']
+        card: 'Paid via card',
+        apple: 'Paid via Apple Pay',
+        wallet: 'Paid via wallet'
       };
-      let methodLabelEn, methodLabelFa;
+      let methodLabel;
       if(state.walletApplied > 0){
         const secondary = methodLabels[state.payMethod] || methodLabels.card;
-        methodLabelEn = 'Paid via wallet (' + fmt$(state.walletApplied) + ') + ' + secondary[0].replace('Paid via ', '');
-        methodLabelFa = 'پرداخت با کیف پول (' + fmt$(state.walletApplied) + ') + ' + secondary[1];
+        methodLabel = 'Paid via wallet (' + fmt$(state.walletApplied) + ') + ' + secondary.replace('Paid via ', '');
       } else {
-        methodLabelEn = (methodLabels[state.payMethod] || methodLabels.card)[0];
-        methodLabelFa = (methodLabels[state.payMethod] || methodLabels.card)[1];
+        methodLabel = methodLabels[state.payMethod] || methodLabels.card;
       }
-      document.getElementById('receiptMeta').innerHTML = `<span class="en">${methodLabelEn}</span><span class="fa">${methodLabelFa}</span>`;
-      document.getElementById('receiptDriver').innerHTML = state.driver ? `<span class="en">${state.driver.d.en}</span><span class="fa">${state.driver.d.fa}</span>` : '—';
+      document.getElementById('receiptMeta').innerHTML = `<span class="en">${methodLabel}</span>`;
+      document.getElementById('receiptDriver').innerHTML = state.driver ? `<span class="en">${state.driver.d.en}</span>` : '—';
       document.getElementById('receiptDist').textContent = state.pickup || '—';
-      const isFaR = document.documentElement.classList.contains('fa');
-      let durationTextEn, durationTextFa;
+      let durationText;
       if(state.mode === 'ondemand'){
-        durationTextEn = state.bnHours + ' hours' + (state.time ? ' · ' + formatTime(state.time) : '');
-        durationTextFa = state.bnHours + ' ساعت' + (state.time ? ' · ' + formatTime(state.time) : '');
+        durationText = state.bnHours + ' hours' + (state.time ? ' · ' + formatTime(state.time) : '');
       } else if(state.schedType === 'daily'){
-        durationTextEn = 'Full day' + (state.date ? ' · ' + formatDate(state.date, false) + ', ' + formatTime(state.time) : '');
-        durationTextFa = 'تمام روز' + (state.date ? ' · ' + formatDate(state.date, true) + ', ' + formatTime(state.time) : '');
+        durationText = 'Full day' + (state.date ? ' · ' + formatDate(state.date) + ', ' + formatTime(state.time) : '');
       } else {
-        durationTextEn = state.hours + ' hours' + (state.date ? ' · ' + formatDate(state.date, false) + ', ' + formatTime(state.time) : '');
-        durationTextFa = state.hours + ' ساعت' + (state.date ? ' · ' + formatDate(state.date, true) + ', ' + formatTime(state.time) : '');
+        durationText = state.hours + ' hours' + (state.date ? ' · ' + formatDate(state.date) + ', ' + formatTime(state.time) : '');
       }
-      document.getElementById('receiptDur').textContent = isFaR ? durationTextFa : durationTextEn;
+      document.getElementById('receiptDur').textContent = durationText;
 
       document.querySelectorAll('.star').forEach(s=>s.classList.remove('filled'));
 
@@ -1583,13 +1386,11 @@
           mode: state.mode,
           schedType: state.schedType,
           pickup: state.pickup,
-          durationTextEn: durationTextEn,
-          durationTextFa: durationTextFa,
+          durationText: durationText,
           fareTotal: state.fareTotal,
           currencySuffix: state.currencySuffix,
           payMethod: state.payMethod,
           driverEn: state.driver ? state.driver.d.en : null,
-          driverFa: state.driver ? state.driver.d.fa : null,
           rating: 0
         };
         state.user.rides.unshift(rideRecord);
@@ -1624,150 +1425,20 @@
     showScreen('home');
   });
 
-  // ================= ADMIN =================
+  // ================= SETTINGS DISPLAY =================
+  // (pricing/fleet values are still driven by the `settings` object — they're
+  // just no longer editable from inside the app. See the Supabase wiring
+  // further down for how `settings` gets populated from the database.)
 
   function applySettingsToUI(){
-    const isFa = document.documentElement.classList.contains('fa');
-    const rateNoteEn = `$${settings.hourlyRate}/hr · rate caps at ${settings.rateCapHours} hours`;
-    const rateNoteFa = `${settings.hourlyRate} دلار در ساعت · سقف نرخ در ${settings.rateCapHours} ساعت`;
+    const rateNote = `$${settings.hourlyRate}/hr · rate caps at ${settings.rateCapHours} hours`;
     ['bnRateNote', 'schedRateNote'].forEach(id=>{
       const el = document.getElementById(id);
-      el.querySelector('.en').textContent = rateNoteEn;
-      el.querySelector('.fa').textContent = rateNoteFa;
+      el.querySelector('.en').textContent = rateNote;
     });
     document.getElementById('fleetNameEn').textContent = settings.fleetName;
-    document.getElementById('fleetNameFa').textContent = settings.fleetName;
     document.getElementById('fleetSeatsEn').textContent = settings.fleetSeats;
-    document.getElementById('fleetSeatsFa').textContent = settings.fleetSeats;
   }
-
-  function renderDriverList(){
-    const list = document.getElementById('driverList');
-    if(DRIVERS.length === 0){
-      list.innerHTML = `<div style="color:var(--graphite); font-size:0.85rem; padding:10px 0;"><span class="en">No drivers yet — add one below.</span><span class="fa">هنوز راننده‌ای اضافه نشده — یکی در پایین اضافه کنید.</span></div>`;
-      return;
-    }
-    list.innerHTML = DRIVERS.map((d, i) => `
-      <div class="driver-row">
-        <div class="d-init">${escapeHtml(d.initial)}</div>
-        <div class="d-name">${escapeHtml(d.en)}</div>
-        <button class="d-remove" data-remove-driver="${i}" type="button">×</button>
-      </div>
-    `).join('');
-    list.querySelectorAll('[data-remove-driver]').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const idx = parseInt(btn.dataset.removeDriver, 10);
-        DRIVERS.splice(idx, 1);
-        renderDriverList();
-      });
-    });
-  }
-
-  function populateAdminForm(){
-    document.getElementById('setHourlyRate').value = settings.hourlyRate;
-    document.getElementById('setDailyRate').value = settings.dailyRate;
-    document.getElementById('setRateCapHours').value = settings.rateCapHours;
-    document.getElementById('setMaxHours').value = settings.maxBookableHours;
-    document.getElementById('setDiscountStep').value = settings.discountStepPct;
-    document.getElementById('setMaxDiscount').value = settings.maxDiscountPct;
-    document.getElementById('setServiceFee').value = settings.serviceFee;
-    document.getElementById('setFleetName').value = settings.fleetName;
-    document.getElementById('setFleetSeats').value = settings.fleetSeats;
-    renderDriverList();
-  }
-
-  function openAdminView(){
-    document.getElementById('authView').style.display = 'none';
-    document.getElementById('riderView').style.display = 'none';
-    document.getElementById('adminView').classList.add('open');
-    populateAdminForm();
-  }
-  function closeAdminView(){
-    document.getElementById('adminView').classList.remove('open');
-    if(state.user){
-      document.getElementById('riderView').style.display = '';
-    } else {
-      document.getElementById('authView').style.display = '';
-    }
-  }
-
-  const adminModal = document.getElementById('adminModal');
-  const adminPasswordInput = document.getElementById('adminPasswordInput');
-  const adminError = document.getElementById('adminError');
-
-  document.getElementById('adminOpenBtn').addEventListener('click', ()=>{
-    if(state.isAdmin){
-      openAdminView();
-      return;
-    }
-    adminError.classList.remove('show');
-    adminPasswordInput.value = '';
-    adminModal.classList.add('open');
-    setTimeout(()=> adminPasswordInput.focus(), 50);
-  });
-
-  document.getElementById('adminCancelBtn').addEventListener('click', ()=>{
-    adminModal.classList.remove('open');
-  });
-
-  function attemptAdminLogin(){
-    if(adminPasswordInput.value === ADMIN_PASSWORD){
-      state.isAdmin = true;
-      adminModal.classList.remove('open');
-      openAdminView();
-    } else {
-      adminError.classList.add('show');
-    }
-  }
-  document.getElementById('adminSubmitBtn').addEventListener('click', attemptAdminLogin);
-  adminPasswordInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') attemptAdminLogin(); });
-
-  document.getElementById('adminLogoutBtn').addEventListener('click', closeAdminView);
-
-  document.getElementById('addDriverBtn').addEventListener('click', ()=>{
-    const nameInput = document.getElementById('newDriverName');
-    const name = nameInput.value.trim();
-    if(!name) return;
-    const initial = name.charAt(0).toUpperCase();
-    DRIVERS.push({ en: name, fa: name, initial: initial });
-    nameInput.value = '';
-    renderDriverList();
-  });
-  document.getElementById('newDriverName').addEventListener('keydown', (e)=>{
-    if(e.key === 'Enter') document.getElementById('addDriverBtn').click();
-  });
-
-  document.getElementById('saveSettingsBtn').addEventListener('click', ()=>{
-    settings.hourlyRate = Math.max(1, parseFloat(document.getElementById('setHourlyRate').value) || DEFAULT_SETTINGS.hourlyRate);
-    settings.dailyRate = Math.max(1, parseFloat(document.getElementById('setDailyRate').value) || DEFAULT_SETTINGS.dailyRate);
-    settings.rateCapHours = Math.max(1, parseInt(document.getElementById('setRateCapHours').value, 10) || DEFAULT_SETTINGS.rateCapHours);
-    settings.maxBookableHours = Math.max(settings.rateCapHours, parseInt(document.getElementById('setMaxHours').value, 10) || DEFAULT_SETTINGS.maxBookableHours);
-    settings.discountStepPct = Math.max(0, parseFloat(document.getElementById('setDiscountStep').value) || 0);
-    settings.maxDiscountPct = Math.min(100, Math.max(0, parseFloat(document.getElementById('setMaxDiscount').value) || 0));
-    settings.serviceFee = Math.max(0, parseFloat(document.getElementById('setServiceFee').value) || 0);
-    settings.fleetName = document.getElementById('setFleetName').value.trim() || DEFAULT_SETTINGS.fleetName;
-    settings.fleetSeats = document.getElementById('setFleetSeats').value.trim() || DEFAULT_SETTINGS.fleetSeats;
-
-    // keep steppers in range of the new max
-    state.bnHours = Math.min(state.bnHours, settings.maxBookableHours);
-    state.hours = Math.min(state.hours, settings.maxBookableHours);
-    document.getElementById('bnHoursVal').textContent = state.bnHours;
-    document.getElementById('hoursVal').textContent = state.hours;
-
-    applySettingsToUI();
-    populateAdminForm();
-
-    const toast = document.getElementById('saveToast');
-    toast.classList.add('show');
-    setTimeout(()=> toast.classList.remove('show'), 1800);
-  });
-
-  document.getElementById('resetSettingsBtn').addEventListener('click', ()=>{
-    Object.assign(settings, DEFAULT_SETTINGS);
-    DRIVERS = DEFAULT_DRIVERS.map(d => Object.assign({}, d));
-    applySettingsToUI();
-    populateAdminForm();
-  });
 
   applySettingsToUI();
 
@@ -1781,13 +1452,11 @@
       document.getElementById('authNameField').style.display = isSignup ? '' : 'none';
       const submitBtn = document.getElementById('authSubmitBtn');
       submitBtn.querySelector('.en').textContent = isSignup ? 'Create account' : 'Sign in';
-      submitBtn.querySelector('.fa').textContent = isSignup ? 'ساخت حساب' : 'ورود';
       document.getElementById('authError').classList.remove('show');
     });
   });
 
   function attemptAuth(){
-    const isFa = document.documentElement.classList.contains('fa');
     const isSignup = state.authMode === 'signup';
     const nameVal = document.getElementById('authNameInput').value.trim();
     const emailVal = document.getElementById('authEmailInput').value.trim();
@@ -1802,9 +1471,6 @@
       errorEl.querySelector('.en').textContent = !nameOk
         ? 'Please enter your name.'
         : !emailOk ? 'Please enter a valid email address.' : 'Password must be at least 4 characters.';
-      errorEl.querySelector('.fa').textContent = !nameOk
-        ? 'لطفاً نام خود را وارد کنید.'
-        : !emailOk ? 'لطفاً یک ایمیل معتبر وارد کنید.' : 'رمز عبور باید حداقل ۴ کاراکتر باشد.';
       errorEl.classList.add('show');
       return;
     }
@@ -1866,33 +1532,30 @@
     const sub = document.getElementById('walletPaySub');
     if(sub){
       sub.querySelector('.en').textContent = balance + ' available';
-      sub.querySelector('.fa').textContent = balance.replace('$','') + ' دلار موجودی';
     }
   }
 
   const GENDER_LABELS = {
-    '': ['', ''],
-    female: ['Female', 'زن'],
-    male: ['Male', 'مرد'],
-    nonbinary: ['Non-binary', 'غیر دوجنسیتی'],
-    unspecified: ['Prefer not to say', 'ترجیح می‌دهم نگویم']
+    '': '',
+    female: 'Female',
+    male: 'Male',
+    nonbinary: 'Non-binary',
+    unspecified: 'Prefer not to say'
   };
   function updateGenderOptions(){
-    const isFa = document.documentElement.classList.contains('fa');
     const select = document.getElementById('profileGenderInput');
     if(!select) return;
     Array.prototype.forEach.call(select.options, function(opt){
-      const labels = GENDER_LABELS[opt.value] || ['', ''];
-      opt.textContent = isFa ? labels[1] : labels[0];
+      opt.textContent = GENDER_LABELS[opt.value] || '';
     });
   }
   updateGenderOptions();
 
   const CARD_BRAND_LABELS = {
-    visa: ['Visa', 'ویزا'],
-    mastercard: ['Mastercard', 'مسترکارت'],
-    amex: ['American Express', 'امریکن اکسپرس'],
-    card: ['Card', 'کارت']
+    visa: 'Visa',
+    mastercard: 'Mastercard',
+    amex: 'American Express',
+    card: 'Card'
   };
 
   function detectCardBrand(digits){
@@ -1902,30 +1565,28 @@
     return 'card';
   }
 
-  function formatRideDate(d, isFa){
-    const locale = isFa ? 'fa-IR-u-ca-gregory' : 'en-US';
-    return d.toLocaleDateString(locale, { month:'short', day:'numeric' }) + ' · ' + d.toLocaleTimeString(locale, { hour:'numeric', minute:'2-digit' });
+  function formatRideDate(d){
+    return d.toLocaleDateString('en-US', { month:'short', day:'numeric' }) + ' · ' + d.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
   }
 
   function renderHistoryList(){
     if(!state.user) return;
-    const isFa = document.documentElement.classList.contains('fa');
     const list = document.getElementById('historyList');
     const rides = state.user.rides || [];
     if(rides.length === 0){
-      list.innerHTML = `<div class="history-empty"><span class="en">No rides yet — your trips will show up here once you book one.</span><span class="fa">هنوز سفری ثبت نشده — سفرهای شما پس از رزرو اینجا نمایش داده می‌شوند.</span></div>`;
+      list.innerHTML = `<div class="history-empty"><span class="en">No rides yet — your trips will show up here once you book one.</span></div>`;
       return;
     }
     list.innerHTML = rides.map(function(r){
-      const durationText = isFa ? r.durationTextFa : r.durationTextEn;
-      const driverName = isFa ? (r.driverFa || '—') : (r.driverEn || '—');
+      const durationText = r.durationText;
+      const driverName = r.driverEn || '—';
       const fare = fmt$(r.fareTotal, r.currencySuffix);
       const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
-      const notRated = isFa ? 'بدون امتیاز' : 'Not rated';
+      const notRated = 'Not rated';
       return `
         <div class="ride-card">
           <div class="rc-top">
-            <span class="rc-date">${formatRideDate(r.completedAt, isFa)}</span>
+            <span class="rc-date">${formatRideDate(r.completedAt)}</span>
             <span class="rc-fare">${fare}</span>
           </div>
           <div class="rc-loc">${escapeHtml(r.pickup || '')}</div>
@@ -1957,7 +1618,6 @@
   function confirmScheduledRide(){
     const dt = buildSchedDateTime();
     const isDaily = state.schedType === 'daily';
-    const isFa = document.documentElement.classList.contains('fa');
 
     const record = {
       id: Date.now() + '_' + Math.floor(Math.random()*1000),
@@ -1981,27 +1641,25 @@
     }
 
     // populate confirmation screen
-    const dateLabel = dt ? (formatDate(state.date, isFa) + ', ' + formatTime(state.time)) : '—';
+    const dateLabel = dt ? (formatDate(state.date) + ', ' + formatTime(state.time)) : '—';
     document.getElementById('schedConfirmDate').textContent = dateLabel;
     document.getElementById('schedConfirmLoc').textContent = state.pickup || '—';
     document.getElementById('schedConfirmMeta').textContent = isDaily
-      ? (isFa ? 'تمام روز' : 'Full day')
-      : (state.hours + (isFa ? ' ساعت' : ' hours'));
+      ? 'Full day'
+      : (state.hours + ' hours');
     document.getElementById('schedConfirmTotal').textContent = fmt$(state.fareTotal, state.currencySuffix);
 
     showScreen('schedConfirm');
   }
 
-  function formatSchedDateTime(dt, isFa){
+  function formatSchedDateTime(dt){
     if(!dt) return '—';
-    const locale = isFa ? 'fa-IR-u-ca-gregory' : 'en-US';
-    return dt.toLocaleDateString(locale, { weekday:'short', month:'short', day:'numeric' }) + ' · ' +
-           dt.toLocaleTimeString(locale, { hour:'numeric', minute:'2-digit' });
+    return dt.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' }) + ' · ' +
+           dt.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
   }
 
   function renderScheduledRides(){
     if(!state.user) return;
-    const isFa = document.documentElement.classList.contains('fa');
     const section = document.getElementById('scheduledRidesSection');
     const list = document.getElementById('scheduledRidesList');
     const rides = (state.user.scheduledRides || []).filter(function(r){
@@ -2016,20 +1674,18 @@
     section.style.display = '';
     list.innerHTML = rides.map(function(r){
       const isDaily = r.schedType === 'daily';
-      const metaText = isDaily
-        ? (isFa ? 'تمام روز' : 'Full day')
-        : (r.hours + (isFa ? ' ساعت' : ' hours'));
+      const metaText = isDaily ? 'Full day' : (r.hours + ' hours');
       return `
         <div class="sched-card">
           <div class="sc-top">
-            <span class="sc-date">${formatSchedDateTime(r.dateTime, isFa)}</span>
+            <span class="sc-date">${formatSchedDateTime(r.dateTime)}</span>
             <button class="sc-cancel" data-cancel-sched="${r.id}" type="button" title="Cancel">×</button>
           </div>
           <div class="sc-loc">${escapeHtml(r.pickup || '')}</div>
           <div class="sc-meta">${metaText} · ${fmt$(r.fareTotal, r.currencySuffix)}</div>
           <div class="sc-reminder">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg>
-            <span class="en">Reminder set for 2 hours before</span><span class="fa">یادآوری ۲ ساعت قبل تنظیم شد</span>
+            <span class="en">Reminder set for 2 hours before</span>
           </div>
         </div>
       `;
@@ -2058,10 +1714,8 @@
   });
 
   function showReminderBanner(ride){
-    const isFa = document.documentElement.classList.contains('fa');
     const banner = document.getElementById('reminderBanner');
-    const text = (isFa ? 'سفر شما به ' : 'Your ride to ') + (ride.pickup || (isFa ? 'مقصد' : 'your destination')) +
-      (isFa ? ' در ۲ ساعت دیگر است.' : ' is in 2 hours.');
+    const text = 'Your ride to ' + (ride.pickup || 'your destination') + ' is in 2 hours.';
     document.getElementById('reminderBannerText').textContent = text;
     banner.classList.add('show');
 
@@ -2094,15 +1748,15 @@
     const list = document.getElementById('cardList');
     const cards = state.user.cards || [];
     if(cards.length === 0){
-      list.innerHTML = `<div style="color:var(--graphite); font-size:0.85rem; padding:14px 0;"><span class="en">No cards saved — add one below.</span><span class="fa">کارتی ذخیره نشده — یکی در پایین اضافه کنید.</span></div>`;
+      list.innerHTML = `<div style="color:var(--graphite); font-size:0.85rem; padding:14px 0;"><span class="en">No cards saved — add one below.</span></div>`;
       return;
     }
     list.innerHTML = cards.map(function(c, i){
-      const labels = CARD_BRAND_LABELS[c.brand] || CARD_BRAND_LABELS.card;
+      const label = CARD_BRAND_LABELS[c.brand] || CARD_BRAND_LABELS.card;
       return `
         <div class="driver-row">
-          <div class="d-init">${labels[0].charAt(0)}</div>
-          <div class="d-name">${labels[0]} •••• ${c.last4}</div>
+          <div class="d-init">${label.charAt(0)}</div>
+          <div class="d-name">${label} •••• ${c.last4}</div>
           <button class="d-remove" data-remove-card="${i}" type="button">×</button>
         </div>
       `;
@@ -2133,11 +1787,11 @@
     }
     cardOption.style.display = '';
     const primary = cards[0];
-    const labels = CARD_BRAND_LABELS[primary.brand] || CARD_BRAND_LABELS.card;
+    const label = CARD_BRAND_LABELS[primary.brand] || CARD_BRAND_LABELS.card;
     document.getElementById('cardPayName').innerHTML =
-      `<span class="en">${labels[0]} •••• ${primary.last4}</span><span class="fa">${labels[1]} •••• ${primary.last4}</span>`;
+      `<span class="en">${label} •••• ${primary.last4}</span>`;
     document.getElementById('cardPaySub').innerHTML =
-      `<span class="en">${labels[0]}</span><span class="fa">${labels[1]}</span>`;
+      `<span class="en">${label}</span>`;
   }
 
   document.getElementById('addCardBtn').addEventListener('click', function(){
