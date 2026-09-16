@@ -960,8 +960,8 @@
     stack: ['home']
   };
 
-  // ---------- pricing / fleet settings (currently defaults; wired to Supabase's
-  // app_settings table so these can be edited there instead of in-app) ----------
+  // ---------- pricing / fleet settings (defaults; overwritten by Supabase's
+  // app_settings table below, once that fetch resolves) ----------
   const DEFAULT_SETTINGS = {
     hourlyRate: 100,
     dailyRate: 2000,
@@ -974,6 +974,35 @@
     fleetSeats: '4 seats · white SheDrives wordmark'
   };
   const settings = Object.assign({}, DEFAULT_SETTINGS);
+
+  // Pull the real pricing/fleet row from Supabase. If this fails for any reason
+  // (offline, table missing, etc.) the app just keeps using DEFAULT_SETTINGS above —
+  // it never breaks the booking flow, it just won't reflect your latest edits.
+  async function loadAppSettings(){
+    try {
+      const { data, error } = await sb.from('app_settings').select('*').eq('id', 1).single();
+      if(error){
+        console.warn('Could not load settings from Supabase, using built-in defaults:', error.message);
+        return;
+      }
+      if(data){
+        settings.hourlyRate = Number(data.hourly_rate);
+        settings.dailyRate = Number(data.daily_rate);
+        settings.rateCapHours = Number(data.rate_cap_hours);
+        settings.maxBookableHours = Number(data.max_bookable_hours);
+        settings.discountStepPct = Number(data.discount_step_pct);
+        settings.maxDiscountPct = Number(data.max_discount_pct);
+        settings.serviceFee = Number(data.service_fee);
+        settings.fleetName = data.fleet_name;
+        settings.fleetSeats = data.fleet_seats;
+        applySettingsToUI();
+        console.log('✅ Pricing settings loaded from Supabase');
+      }
+    } catch(e){
+      console.warn('Supabase settings fetch failed, using built-in defaults:', e);
+    }
+  }
+  loadAppSettings();
 
   const DEFAULT_DRIVERS = [
     {en:'Sara M.', initial:'S'},
