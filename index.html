@@ -2096,15 +2096,63 @@
     document.getElementById('profilePhotoInput').click();
   });
 
-  document.getElementById('profilePhotoInput').addEventListener('change', (e)=>{
+  document.getElementById('profilePhotoInput').addEventListener('change', async (e)=>{
     const file = e.target.files && e.target.files[0];
     if(!file || !state.user) return;
-    const reader = new FileReader();
-    reader.onload = ()=>{
-      state.user.photo = reader.result;
+
+    const photoBtn = document.getElementById('profilePhotoBtn');
+    const label = photoBtn.querySelector('.en');
+    const originalLabel = label.textContent;
+
+    if(file.size > 5 * 1024 * 1024){
+      label.textContent = 'Photo too large (max 5MB)';
+      setTimeout(()=>{ label.textContent = originalLabel; }, 2500);
+      e.target.value = '';
+      return;
+    }
+
+    label.textContent = 'Uploading…';
+    photoBtn.disabled = true;
+
+    try {
+      const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+      const path = state.user.id + '/avatar_' + Date.now() + '.' + ext;
+
+      const { error: uploadErr } = await sb.storage.from('avatars').upload(path, file, {
+        cacheControl: '3600',
+        upsert: false
+      });
+      if(uploadErr){
+        console.error('Could not upload photo:', uploadErr.message);
+        label.textContent = 'Upload failed — try again';
+        setTimeout(()=>{ label.textContent = originalLabel; }, 2500);
+        return;
+      }
+
+      const { data: urlData } = sb.storage.from('avatars').getPublicUrl(path);
+      const publicUrl = urlData.publicUrl;
+
+      const { error: profileErr } = await sb.from('profiles')
+        .update({ photo_url: publicUrl })
+        .eq('id', state.user.id);
+      if(profileErr){
+        console.error('Photo uploaded but could not save to profile:', profileErr.message);
+        label.textContent = 'Could not save — try again';
+        setTimeout(()=>{ label.textContent = originalLabel; }, 2500);
+        return;
+      }
+
+      state.user.photo = publicUrl;
       renderUserAvatar();
-    };
-    reader.readAsDataURL(file);
+      label.textContent = originalLabel;
+    } catch(e){
+      console.error('Network error uploading photo:', e);
+      label.textContent = 'Upload failed — try again';
+      setTimeout(()=>{ label.textContent = originalLabel; }, 2500);
+    } finally {
+      photoBtn.disabled = false;
+      e.target.value = '';
+    }
   });
 
   document.querySelectorAll('[data-add-funds]').forEach(btn=>{
