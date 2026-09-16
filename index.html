@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Herway — Book a ride</title>
+<title>SheDrives — Book a ride</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700;800&family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -87,6 +87,32 @@
 
   /* ===== admin dashboard ===== */
   .admin-wrap{width:100%; max-width:760px; padding:34px 20px 80px; display:none;}
+
+  /* ===== auth (sign in / sign up) ===== */
+  .auth-wrap{width:100%; max-width:420px; padding:60px 20px 80px;}
+  .auth-card{
+    background:#fff; border:1px solid var(--line); border-radius:24px; padding:36px 32px;
+    box-shadow:0 30px 70px -30px rgba(23,19,28,0.25);
+  }
+  .auth-card h1{font-size:1.6rem; margin:0 0 6px;}
+  .auth-sub{color:var(--graphite); font-size:0.9rem; margin:0 0 26px; line-height:1.5;}
+  .auth-error{color:#c0154a; font-size:0.82rem; margin:-6px 0 14px; display:none;}
+  .auth-error.show{display:block;}
+  .auth-note{font-size:0.76rem; color:var(--graphite); text-align:center; margin-top:20px; line-height:1.55;}
+  .user-chip{
+    display:flex; align-items:center; gap:8px; border:1px solid var(--line); background:#fff;
+    padding:7px 8px 7px 14px; border-radius:999px; font-size:0.78rem; font-weight:600; color:var(--graphite);
+  }
+  .user-chip .u-avatar{
+    width:22px; height:22px; border-radius:50%; background:var(--ink); color:var(--pink);
+    display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:700; flex:none;
+    overflow:hidden;
+  }
+  .u-avatar img{width:100%; height:100%; object-fit:cover; display:block;}
+  .user-chip button{
+    border:none; background:var(--pink-soft-2); color:var(--pink-deep); font-weight:700; font-size:0.72rem;
+    padding:5px 10px; border-radius:999px; cursor:pointer; font-family:inherit;
+  }
   .admin-wrap.open{display:block;}
   .admin-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;}
   .admin-head h1{font-size:1.7rem; margin:0;}
@@ -116,6 +142,8 @@
   }
   .driver-row .d-remove:hover{border-color:#c0154a; color:#c0154a;}
   .driver-add{display:flex; gap:10px; margin-top:14px;}
+  .section-label{font-size:0.78rem; font-weight:700; color:var(--graphite); text-transform:uppercase; letter-spacing:0.03em; margin:4px 0 10px;}
+  html.fa .section-label{text-transform:none;}
   .driver-add input{flex:1;}
 
   .admin-actions{display:flex; gap:12px; align-items:center; flex-wrap:wrap;}
@@ -173,11 +201,33 @@
   .field{margin-bottom:14px;}
   .field label{display:block; font-size:0.74rem; font-weight:700; color:var(--graphite); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.03em;}
   html.fa .field label{text-transform:none;}
-  .field input, .field select{
+  .field input, .field select, .field textarea{
     width:100%; border:1px solid var(--line); border-radius:12px; padding:12px 14px; font-size:0.94rem;
     font-family:inherit; background:var(--paper); color:var(--ink);
   }
-  .field input:focus, .field select:focus{outline:2px solid var(--pink); outline-offset:1px;}
+  .field textarea{resize:vertical; min-height:110px; line-height:1.5;}
+  .field input:focus, .field select:focus, .field textarea:focus{outline:2px solid var(--pink); outline-offset:1px;}
+
+  .help-email-card{
+    display:flex; align-items:center; gap:12px; border:1px solid var(--line); border-radius:14px;
+    padding:14px 16px; margin-bottom:22px; text-decoration:none; color:inherit;
+  }
+  .help-email-card:hover{border-color:var(--pink);}
+  .help-email-card .he-icon{
+    width:38px; height:38px; border-radius:50%; background:var(--pink-soft-2); color:var(--pink-deep);
+    display:flex; align-items:center; justify-content:center; flex:none;
+  }
+  .help-email-card .he-label{font-size:0.78rem; color:var(--graphite);}
+  .help-email-card .he-email{font-weight:700; font-size:0.92rem;}
+  .help-response-note{
+    display:flex; gap:10px; background:var(--pink-soft-2); border-radius:14px; padding:14px 16px;
+    font-size:0.85rem; color:var(--pink-deep); line-height:1.5; margin-top:16px;
+  }
+  .help-response-note svg{flex:none; margin-top:1px;}
+  .help-sent-note{
+    display:none; text-align:center; font-size:0.85rem; color:var(--green); font-weight:600; margin-top:14px;
+  }
+  .help-sent-note.show{display:block;}
 
   .stop-row{position:relative;}
   .stop-dot{position:absolute; inset-inline-start:14px; top:16px; width:8px; height:8px; border-radius:50%; background:var(--pink); z-index:2;}
@@ -232,11 +282,18 @@
     display:flex; align-items:center; gap:12px; border:1.5px solid var(--line); border-radius:14px; padding:14px; cursor:pointer;
   }
   .pay-method.selected{border-color:var(--pink); background:var(--pink-soft-2);}
+  .pay-method.applied{border-color:var(--green); background:#eefbf3; cursor:default;}
   .pay-method .pm-name{font-weight:700; font-size:0.9rem;}
   .pay-method .pm-sub{font-size:0.76rem; color:var(--graphite);}
   .pay-method .radio{width:18px; height:18px; border-radius:50%; border:1.5px solid var(--graphite); flex:none; margin-inline-start:auto; position:relative;}
   .pay-method.selected .radio{border-color:var(--pink);}
   .pay-method.selected .radio::after{content:''; position:absolute; inset:3px; border-radius:50%; background:var(--pink);}
+  .pay-method.applied .radio{display:none;}
+  .applied-badge{
+    display:none; margin-inline-start:auto; background:var(--green); color:#fff; font-size:0.7rem; font-weight:700;
+    padding:5px 10px; border-radius:999px; flex:none;
+  }
+  .pay-method.applied .applied-badge{display:inline-flex;}
 
   /* ===== matching ===== */
   .matching-wrap{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:22px;}
@@ -259,6 +316,71 @@
   .driver-name{font-weight:700; font-size:0.98rem;}
   .driver-meta{font-size:0.78rem; color:var(--graphite); margin-top:2px;}
   .plate-tag{margin-inline-start:auto; background:var(--ink); color:#fff; font-size:0.72rem; font-weight:700; padding:6px 10px; border-radius:8px; letter-spacing:0.03em;}
+
+  /* ===== profile ===== */
+  .profile-avatar-wrap{display:flex; flex-direction:column; align-items:center; gap:10px; margin-bottom:24px;}
+  .profile-avatar{
+    width:88px; height:88px; border-radius:50%; background:var(--ink); color:var(--pink);
+    display:flex; align-items:center; justify-content:center; font-family:"Fraunces",serif; font-size:2rem;
+    position:relative; overflow:hidden; flex:none;
+  }
+  html.fa .profile-avatar{font-family:"Vazirmatn",sans-serif;}
+  .profile-avatar img{width:100%; height:100%; object-fit:cover; display:block;}
+  .avatar-edit-btn{
+    display:inline-flex; align-items:center; gap:6px; font-size:0.78rem; font-weight:600; color:var(--pink-deep);
+    background:var(--pink-soft-2); border:none; border-radius:999px; padding:7px 14px; cursor:pointer; font-family:inherit;
+  }
+  .wallet-card{
+    background:linear-gradient(135deg, var(--ink), #2a2230); color:#fff; border-radius:18px; padding:22px;
+    margin-bottom:20px;
+  }
+  .wallet-card .w-label{font-size:0.76rem; color:#c7c0cf; margin-bottom:6px;}
+  .wallet-card .w-balance{font-family:"Fraunces",serif; font-size:2rem; margin-bottom:16px;}
+  html.fa .wallet-card .w-balance{font-family:"Vazirmatn",sans-serif; font-weight:700;}
+  .wallet-chips{display:flex; gap:8px;}
+  .wallet-chips button{
+    flex:1; border:1px solid rgba(255,255,255,0.25); background:rgba(255,255,255,0.08); color:#fff;
+    border-radius:10px; padding:9px 6px; font-size:0.8rem; font-weight:600; cursor:pointer; font-family:inherit;
+  }
+  .wallet-chips button:hover{background:rgba(255,255,255,0.16);}
+  .profile-saved{font-size:0.8rem; color:var(--green); font-weight:600; text-align:center; opacity:0; transition:opacity .2s; margin-top:10px;}
+  .profile-saved.show{opacity:1;}
+
+  .ride-card{border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:14px;}
+  .ride-card .rc-top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;}
+  .ride-card .rc-date{font-size:0.76rem; color:var(--graphite);}
+  .ride-card .rc-fare{font-family:"Fraunces",serif; font-weight:600; font-size:1.05rem;}
+  html.fa .ride-card .rc-fare{font-family:"Vazirmatn",sans-serif; font-weight:700;}
+  .ride-card .rc-loc{font-weight:600; font-size:0.92rem; margin-bottom:2px;}
+  .ride-card .rc-meta{font-size:0.8rem; color:var(--graphite); margin-bottom:8px;}
+  .ride-card .rc-bottom{display:flex; justify-content:space-between; align-items:center; font-size:0.78rem; color:var(--graphite);}
+  .ride-card .rc-stars{color:var(--pink); letter-spacing:1px;}
+  .history-empty{text-align:center; color:var(--graphite); font-size:0.9rem; padding:60px 20px; line-height:1.6;}
+
+  .sched-card{border:1px solid var(--pink-soft); background:var(--pink-soft-2); border-radius:16px; padding:14px 16px; margin-bottom:10px;}
+  .sched-card .sc-top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:4px;}
+  .sched-card .sc-date{font-weight:700; font-size:0.88rem; color:var(--pink-deep);}
+  .sched-card .sc-cancel{
+    border:none; background:transparent; color:var(--graphite); font-size:0.95rem; cursor:pointer;
+    width:22px; height:22px; flex:none; border-radius:50%;
+  }
+  .sched-card .sc-cancel:hover{background:rgba(0,0,0,0.06); color:#c0154a;}
+  .sched-card .sc-loc{font-size:0.86rem; color:var(--ink); margin-bottom:2px;}
+  .sched-card .sc-meta{font-size:0.78rem; color:var(--graphite);}
+  .sched-card .sc-reminder{font-size:0.72rem; color:var(--pink-deep); margin-top:6px; display:flex; align-items:center; gap:5px;}
+
+  .reminder-banner{
+    position:absolute; top:-220px; left:12px; right:12px; z-index:30;
+    background:var(--ink); color:#fff; border-radius:16px; padding:14px 16px;
+    display:flex; gap:10px; align-items:flex-start;
+    box-shadow:0 20px 40px -12px rgba(0,0,0,0.5);
+    transition:top .35s ease;
+  }
+  .reminder-banner.show{top:52px;}
+  .reminder-banner .rb-icon{flex:none; color:var(--pink); margin-top:1px;}
+  .reminder-banner .rb-title{font-weight:700; font-size:0.86rem; margin-bottom:2px;}
+  .reminder-banner .rb-sub{font-size:0.78rem; color:#c7c0cf; line-height:1.4;}
+  .reminder-banner .rb-close{background:none; border:none; color:#c7c0cf; cursor:pointer; font-size:1rem; flex:none;}
 
   .map-mock{
     position:relative; height:220px; border-radius:16px; margin-bottom:18px; overflow:hidden;
@@ -299,8 +421,15 @@
 <body>
 
 <div class="topbar">
-  <div class="wordmark"><span class="dot"></span>Herway</div>
+  <div class="wordmark"><span class="dot"></span>SheDrives</div>
   <div class="topbar-right">
+    <div class="user-chip" id="userChip" style="display:none;">
+      <button id="userChipOpenBtn" style="display:flex; align-items:center; gap:8px; border:none; background:transparent; cursor:pointer; font:inherit; padding:0; color:inherit;">
+        <div class="u-avatar" id="userAvatar">?</div>
+        <span id="userChipName">—</span>
+      </button>
+      <button id="signOutBtn"><span class="en">Sign out</span><span class="fa">خروج</span></button>
+    </div>
     <button class="admin-link" id="adminOpenBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
       <span class="en">Admin</span><span class="fa">مدیریت</span>
@@ -326,10 +455,56 @@
   </div>
 </div>
 
-<div id="riderView">
+<!-- PARTIAL WALLET CONFIRMATION -->
+<div class="modal-overlay" id="partialWalletModal">
+  <div class="modal-card">
+    <h3><span class="en">Use your wallet balance?</span><span class="fa">از موجودی کیف پول استفاده شود؟</span></h3>
+    <p id="partialWalletText">—</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="partialWalletNoBtn" style="border:1px solid var(--line);"><span class="en">Not now</span><span class="fa">فعلاً نه</span></button>
+      <button class="btn btn-primary" id="partialWalletYesBtn"><span class="en">Apply wallet</span><span class="fa">اعمال کیف پول</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- SIGN IN / SIGN UP -->
+<div class="auth-wrap" id="authView">
+  <div class="auth-card">
+    <h1><span class="en">Welcome to SheDrives</span><span class="fa">به SheDrives خوش آمدید</span></h1>
+    <p class="auth-sub"><span class="en">Sign in or create an account to book your ride.</span><span class="fa">برای رزرو سفر خود وارد شوید یا حساب کاربری بسازید.</span></p>
+
+    <div class="segmented" id="authTypeToggle" style="margin-bottom:22px;">
+      <button class="active" data-authtype="signin"><span class="en">Sign in</span><span class="fa">ورود</span></button>
+      <button data-authtype="signup"><span class="en">Sign up</span><span class="fa">ثبت‌نام</span></button>
+    </div>
+
+    <div class="field" id="authNameField" style="display:none;">
+      <label><span class="en">Name</span><span class="fa">نام</span></label>
+      <input type="text" id="authNameInput" placeholder="Your name" autocomplete="off">
+    </div>
+    <div class="field">
+      <label><span class="en">Email</span><span class="fa">ایمیل</span></label>
+      <input type="email" id="authEmailInput" placeholder="you@example.com" autocomplete="off">
+    </div>
+    <div class="field">
+      <label><span class="en">Password</span><span class="fa">رمز عبور</span></label>
+      <input type="password" id="authPasswordInput" placeholder="••••••••" autocomplete="off">
+    </div>
+    <div class="auth-error" id="authError"><span class="en">Please fill in a valid email and password.</span><span class="fa">لطفاً یک ایمیل و رمز عبور معتبر وارد کنید.</span></div>
+
+    <button class="btn btn-primary" id="authSubmitBtn"><span class="en">Sign in</span><span class="fa">ورود</span></button>
+
+    <p class="auth-note">
+      <span class="en">Demo only — this doesn't create a real account. Any email and password will work, and nothing is stored beyond this browser session.</span>
+      <span class="fa">فقط نمایشی — حساب واقعی ساخته نمی‌شود. هر ایمیل و رمز عبوری کار می‌کند و چیزی فراتر از این نشست ذخیره نمی‌شود.</span>
+    </p>
+  </div>
+</div>
+
+<div id="riderView" style="display:none;">
 <div class="intro">
   <div class="kicker"><span class="en">WORKING PROTOTYPE</span><span class="fa">نمونه اولیه فعال</span></div>
-  <h1><span class="en">Book a Herway ride, right here.</span><span class="fa">همین‌جا یک سفر Herway رزرو کنید.</span></h1>
+  <h1><span class="en">Book a SheDrives ride, right here.</span><span class="fa">همین‌جا یک سفر SheDrives رزرو کنید.</span></h1>
   <p><span class="en">This runs the actual booking flow from the concept — request, price, pay, match, ride — using a simulated pink fleet and simulated chauffeurs.</span><span class="fa">این نسخه، مسیر واقعی رزرو در ایده را اجرا می‌کند — درخواست، قیمت، پرداخت، تطبیق، سفر — با ناوگان و راننده‌های شبیه‌سازی‌شده.</span></p>
 </div>
 
@@ -338,15 +513,29 @@
     <div class="notch"></div>
     <div class="statusbar">
       <span id="clock">9:41</span>
-      <span>Herway</span>
+      <span>SheDrives</span>
     </div>
 
     <div class="app-body">
+
+      <div class="reminder-banner" id="reminderBanner">
+        <div class="rb-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+        </div>
+        <div style="flex:1;">
+          <div class="rb-title"><span class="en">Ride reminder</span><span class="fa">یادآوری سفر</span></div>
+          <div class="rb-sub" id="reminderBannerText">—</div>
+        </div>
+        <button class="rb-close" id="reminderBannerClose">×</button>
+      </div>
 
       <!-- SCREEN: HOME -->
       <div class="screen active" data-screen="home">
         <div class="screen-head">
           <div class="screen-title"><span class="en">Where to?</span><span class="fa">مقصد شما کجاست؟</span></div>
+          <button class="icon-btn" id="toHelpBtn" style="margin-inline-start:auto;" title="Help & support">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 1.8-2 3.5" /><circle cx="12" cy="16.5" r="0.6" fill="currentColor" stroke="none"/></svg>
+          </button>
         </div>
 
         <div class="segmented" id="modeToggle" role="tablist">
@@ -387,6 +576,12 @@
 
         <!-- hourly fields -->
         <div id="hourlyFields" style="display:none;">
+          <div id="scheduledRidesSection" style="display:none;">
+            <div class="section-label"><span class="en">Your scheduled rides</span><span class="fa">سفرهای زمان‌بندی‌شده شما</span></div>
+            <div id="scheduledRidesList"></div>
+            <div style="height:6px;"></div>
+          </div>
+
           <div class="segmented" style="margin-bottom:14px;" id="schedTypeToggle">
             <button class="active" data-schedtype="hourly"><span class="en">By the hour</span><span class="fa">ساعتی</span></button>
             <button data-schedtype="daily"><span class="en">Full day</span><span class="fa">تمام روز</span></button>
@@ -448,7 +643,7 @@
           </svg>
           <div>
             <div class="ft"><span class="en" id="fleetNameEn">Pink Fleet Sedan</span><span class="fa" id="fleetNameFa">سدان ناوگان صورتی</span></div>
-            <div class="fs"><span class="en" id="fleetSeatsEn">4 seats · white Herway wordmark</span><span class="fa" id="fleetSeatsFa">۴ صندلی · لوگوی سفید Herway</span></div>
+            <div class="fs"><span class="en" id="fleetSeatsEn">4 seats · white SheDrives wordmark</span><span class="fa" id="fleetSeatsFa">۴ صندلی · لوگوی سفید SheDrives</span></div>
           </div>
         </div>
 
@@ -485,11 +680,11 @@
         </div>
 
         <div class="pay-methods">
-          <div class="pay-method selected" data-pay="card">
+          <div class="pay-method selected" data-pay="card" id="cardPayMethod">
             <div style="width:34px;height:24px;border-radius:5px;background:var(--ink);"></div>
             <div>
-              <div class="pm-name"><span class="en">Card •••• 4471</span><span class="fa">کارت •••• ۴۴۷۱</span></div>
-              <div class="pm-sub"><span class="en">Visa, ends 4471</span><span class="fa">ویزا</span></div>
+              <div class="pm-name" id="cardPayName"><span class="en">Card •••• 4471</span><span class="fa">کارت •••• ۴۴۷۱</span></div>
+              <div class="pm-sub" id="cardPaySub"><span class="en">Visa</span><span class="fa">ویزا</span></div>
             </div>
             <div class="radio"></div>
           </div>
@@ -501,14 +696,60 @@
             </div>
             <div class="radio"></div>
           </div>
+          <div class="pay-method" data-pay="wallet" id="walletPayMethod">
+            <div style="width:34px;height:24px;border-radius:5px;background:var(--pink); display:flex; align-items:center; justify-content:center; color:#fff;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12h3"/></svg>
+            </div>
+            <div>
+              <div class="pm-name"><span class="en">Wallet</span><span class="fa">کیف پول</span></div>
+              <div class="pm-sub" id="walletPaySub"><span class="en">$0.00 available</span><span class="fa">۰٫۰۰ دلار موجودی</span></div>
+            </div>
+            <div class="radio" id="walletRadio"></div>
+            <div class="applied-badge" id="walletAppliedBadge">
+              <span class="en">Applied</span><span class="fa">اعمال شد</span>
+            </div>
+          </div>
         </div>
+        <div class="auth-error" id="walletError" style="margin-top:-10px;"><span class="en">Not enough wallet balance — add funds in your profile.</span><span class="fa">موجودی کیف پول کافی نیست — از پروفایل خود شارژ کنید.</span></div>
+        <div class="auth-error" id="remainingMethodError" style="margin-top:-10px;"><span class="en">Please choose a payment method for the remaining balance.</span><span class="fa">لطفاً برای باقی‌مانده، روش پرداختی انتخاب کنید.</span></div>
 
         <div class="price-card">
-          <div class="price-row total"><span><span class="en">Amount</span><span class="fa">مبلغ</span></span><span id="payAmount">$0</span></div>
+          <div class="price-row" id="payWalletAppliedRow" style="display:none; color:var(--green);">
+            <span><span class="en">Wallet applied</span><span class="fa">اعمال‌شده از کیف پول</span></span>
+            <span id="payWalletApplied">-$0.00</span>
+          </div>
+          <div class="price-row total"><span id="payAmountLabel"><span class="en">Amount</span><span class="fa">مبلغ</span></span><span id="payAmount">$0</span></div>
         </div>
 
         <div class="spacer"></div>
         <button class="btn btn-primary" id="payBtn"><span class="en">Pay now</span><span class="fa">پرداخت</span></button>
+      </div>
+
+      <!-- SCREEN: SCHEDULED CONFIRMATION -->
+      <div class="screen" data-screen="schedConfirm">
+        <div class="screen-head" style="justify-content:center;">
+          <div class="screen-title"><span class="en">Ride scheduled</span><span class="fa">سفر زمان‌بندی شد</span></div>
+        </div>
+
+        <div class="receipt-badge">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12.5l5 5L20 6.5"/></svg>
+        </div>
+        <div class="receipt-title serif"><span id="schedConfirmDate">—</span></div>
+        <div class="receipt-sub"><span class="en">You're all set</span><span class="fa">همه چیز آماده است</span></div>
+
+        <div class="price-card">
+          <div class="price-row"><span><span class="en">Location</span><span class="fa">مکان</span></span><span id="schedConfirmLoc">—</span></div>
+          <div class="price-row"><span><span class="en">Details</span><span class="fa">جزئیات</span></span><span id="schedConfirmMeta">—</span></div>
+          <div class="price-row total"><span><span class="en">Total</span><span class="fa">مجموع</span></span><span id="schedConfirmTotal">$0</span></div>
+        </div>
+
+        <div class="help-response-note">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          <span><span class="en">We'll send a reminder 2 hours before your ride. (Demo: shown as an in-app/browser notification, not a real text or email — see note in Scheduled rides.)</span><span class="fa">۲ ساعت قبل از سفرتان یادآوری ارسال می‌شود. (نسخه نمایشی: به‌صورت اعلان درون‌برنامه‌ای، نه پیامک یا ایمیل واقعی)</span></span>
+        </div>
+
+        <div class="spacer"></div>
+        <button class="btn btn-primary" id="schedConfirmDoneBtn"><span class="en">Done</span><span class="fa">تمام</span></button>
       </div>
 
       <!-- SCREEN: MATCHING -->
@@ -615,6 +856,124 @@
         <button class="btn btn-primary" id="doneBtn"><span class="en">Book another ride</span><span class="fa">رزرو سفر دیگر</span></button>
       </div>
 
+      <!-- SCREEN: PROFILE -->
+      <div class="screen" data-screen="profile">
+        <div class="screen-head">
+          <button class="icon-btn" data-back="home">←</button>
+          <div class="screen-title"><span class="en">Profile</span><span class="fa">پروفایل</span></div>
+        </div>
+
+        <div class="profile-avatar-wrap">
+          <div class="profile-avatar" id="profileAvatar">?</div>
+          <input type="file" id="profilePhotoInput" accept="image/*" style="display:none;">
+          <button class="avatar-edit-btn" id="profilePhotoBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h3l2-2h6l2 2h3v12H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+            <span class="en">Change photo (optional)</span><span class="fa">تغییر عکس (اختیاری)</span>
+          </button>
+        </div>
+
+        <div class="wallet-card">
+          <div class="w-label"><span class="en">Wallet balance</span><span class="fa">موجودی کیف پول</span></div>
+          <div class="w-balance" id="profileWalletBalance">$0.00</div>
+          <div class="wallet-chips">
+            <button type="button" data-add-funds="50">+$50</button>
+            <button type="button" data-add-funds="100">+$100</button>
+            <button type="button" data-add-funds="200">+$200</button>
+          </div>
+        </div>
+
+        <div class="section-label"><span class="en">Payment methods</span><span class="fa">روش‌های پرداخت</span></div>
+        <div id="cardList" style="border:1px solid var(--line); border-radius:14px; padding:0 14px; margin-bottom:14px;"></div>
+        <div class="driver-add" style="margin-top:0; margin-bottom:24px;">
+          <input type="text" id="newCardInput" placeholder="Card number" inputmode="numeric" maxlength="23">
+          <button class="btn btn-secondary" id="addCardBtn" style="width:auto; padding:10px 18px;"><span class="en">Add</span><span class="fa">افزودن</span></button>
+        </div>
+
+        <div class="field">
+          <label><span class="en">Name</span><span class="fa">نام</span></label>
+          <input type="text" id="profileNameInput" placeholder="Your name">
+        </div>
+        <div class="field">
+          <label><span class="en">Email</span><span class="fa">ایمیل</span></label>
+          <input type="email" id="profileEmailInput" placeholder="you@example.com">
+        </div>
+        <div class="field">
+          <label><span class="en">Phone number</span><span class="fa">شماره تلفن</span></label>
+          <input type="tel" id="profilePhoneInput" placeholder="(555) 555-0100">
+        </div>
+        <div class="field">
+          <label><span class="en">Gender</span><span class="fa">جنسیت</span></label>
+          <select id="profileGenderInput">
+            <option value=""></option>
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+            <option value="nonbinary">Non-binary</option>
+            <option value="unspecified">Prefer not to say</option>
+          </select>
+        </div>
+
+        <div class="spacer"></div>
+        <button class="btn btn-primary" id="profileSaveBtn"><span class="en">Save changes</span><span class="fa">ذخیره تغییرات</span></button>
+        <div class="profile-saved" id="profileSaved"><span class="en">Saved ✓</span><span class="fa">ذخیره شد ✓</span></div>
+
+        <button class="btn btn-secondary" id="toHistoryBtn" style="margin-top:14px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <span class="en">Ride history</span><span class="fa">تاریخچه سفرها</span>
+        </button>
+      </div>
+
+      <!-- SCREEN: RIDE HISTORY -->
+      <div class="screen" data-screen="history">
+        <div class="screen-head">
+          <button class="icon-btn" data-back="profile">←</button>
+          <div class="screen-title"><span class="en">Ride history</span><span class="fa">تاریخچه سفرها</span></div>
+        </div>
+
+        <div id="historyList"></div>
+      </div>
+
+      <!-- SCREEN: HELP -->
+      <div class="screen" data-screen="help">
+        <div class="screen-head">
+          <button class="icon-btn" data-back="home">←</button>
+          <div class="screen-title"><span class="en">Help & support</span><span class="fa">راهنما و پشتیبانی</span></div>
+        </div>
+
+        <p style="color:var(--graphite); font-size:0.9rem; line-height:1.55; margin:0 0 18px;">
+          <span class="en">Have a complaint or ran into an issue with a ride? Send us the details below.</span>
+          <span class="fa">شکایتی دارید یا در سفر خود با مشکلی مواجه شدید؟ جزئیات را در پایین ارسال کنید.</span>
+        </p>
+
+        <a class="help-email-card" id="helpEmailLink" href="mailto:support@shedrives.com">
+          <div class="he-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          </div>
+          <div>
+            <div class="he-label"><span class="en">Or email us directly</span><span class="fa">یا مستقیم ایمیل بزنید</span></div>
+            <div class="he-email">support@shedrives.com</div>
+          </div>
+        </a>
+
+        <div class="field">
+          <label><span class="en">Subject</span><span class="fa">موضوع</span></label>
+          <input type="text" id="helpSubjectInput" placeholder="What's this about?">
+        </div>
+        <div class="field">
+          <label><span class="en">Message</span><span class="fa">پیام</span></label>
+          <textarea id="helpMessageInput" placeholder="Tell us what happened…"></textarea>
+        </div>
+        <div class="auth-error" id="helpError"><span class="en">Please enter a message before sending.</span><span class="fa">لطفاً قبل از ارسال، پیامی بنویسید.</span></div>
+
+        <div class="spacer"></div>
+        <button class="btn btn-primary" id="helpSendBtn"><span class="en">Send to support</span><span class="fa">ارسال به پشتیبانی</span></button>
+        <div class="help-sent-note" id="helpSentNote"><span class="en">Your email app should now be open with your message ready to send.</span><span class="fa">اپ ایمیل شما باید اکنون با پیام آماده برای ارسال باز شده باشد.</span></div>
+
+        <div class="help-response-note">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <span><span class="en">We typically get back to you regarding your complaint within 2–3 business days.</span><span class="fa">ما معمولاً ظرف ۲ تا ۳ روز کاری به شکایت شما پاسخ می‌دهیم.</span></span>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -707,8 +1066,32 @@
   </div>
 </div>
 
+<!--
+  SUPABASE CLIENT LIBRARY
+  This loads the Supabase JavaScript SDK from a CDN so the app can talk to
+  your real database and auth system. It must load BEFORE the main app
+  script below (script tags run in order as the page parses), which is why
+  it's placed here rather than at the bottom of the file.
+-->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 (function(){
+  // ---------- supabase connection ----------
+  const SUPABASE_URL = 'https://ynxtuzqvvfxswtmppanz.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlueHR1enF2dmZ4c3d0bXBwYW56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0MzE3MjEsImV4cCI6MjEwNTAwNzcyMX0.ZkLlQY6Q-jU1Tcvgk4qir3BIozOwuFGjc40qsn9EHL8';
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // quick connectivity check — logs to the browser console (F12 → Console tab)
+  // so we can confirm the connection works before wiring up real features
+  sb.auth.getSession().then(function(res){
+    if(res.error){
+      console.error('Supabase connection failed:', res.error.message);
+    } else {
+      console.log('✅ Supabase connected successfully. Project:', SUPABASE_URL);
+    }
+  });
+
   function pad2(n){ n = Math.floor(n); return (n < 10 ? '0' : '') + n; }
 
   // ---------- language ----------
@@ -727,6 +1110,9 @@
       document.documentElement.setAttribute('lang','en');
     }
     renderRoute();
+    updateGenderOptions();
+    if(state.mode === 'hourly') renderScheduledRides();
+    if(state.user && document.querySelector('.screen[data-screen="history"]').classList.contains('active')) renderHistoryList();
   });
 
   // ---------- clock ----------
@@ -747,13 +1133,17 @@
     grossFare: 0, discountPct: 0, currencySuffix: '',
     fareBase: 0, fareFee: 3.5, fareTotal: 0,
     payMethod: 'card',
+    walletApplied: 0,
+    pendingWalletBalance: 0,
     driver: null,
     isAdmin: false,
+    user: null,
+    authMode: 'signin',
     stack: ['home']
   };
 
   // ---------- admin-editable settings ----------
-  const ADMIN_PASSWORD = 'herway2026'; // demo-only gate, not real security — visible to anyone who views source
+  const ADMIN_PASSWORD = 'shedrives2026'; // demo-only gate, not real security — visible to anyone who views source
   const DEFAULT_SETTINGS = {
     hourlyRate: 100,
     dailyRate: 2000,
@@ -763,7 +1153,7 @@
     maxDiscountPct: 30,
     serviceFee: 3.5,
     fleetName: 'Pink Fleet Sedan',
-    fleetSeats: '4 seats · white Herway wordmark'
+    fleetSeats: '4 seats · white SheDrives wordmark'
   };
   const settings = Object.assign({}, DEFAULT_SETTINGS);
 
@@ -791,6 +1181,7 @@
       state.mode = btn.dataset.mode;
       document.getElementById('ondemandFields').style.display = state.mode==='ondemand' ? '' : 'none';
       document.getElementById('hourlyFields').style.display = state.mode==='hourly' ? '' : 'none';
+      if(state.mode === 'hourly') renderScheduledRides();
     });
   });
 
@@ -996,20 +1387,124 @@
     showScreen('price');
   });
 
-  document.getElementById('toPayBtn').addEventListener('click', ()=> showScreen('pay'));
+  document.getElementById('toPayBtn').addEventListener('click', ()=>{
+    updateWalletDisplays();
+    updateCardPayOption();
+    clearWalletApplication();
+    document.getElementById('walletError').classList.remove('show');
+    document.getElementById('remainingMethodError').classList.remove('show');
+    showScreen('pay');
+  });
+
+  function openPartialWalletModal(balance){
+    state.pendingWalletBalance = balance;
+    const isFa = document.documentElement.classList.contains('fa');
+    const remaining = state.fareTotal - balance;
+    const textEn = 'Your wallet has ' + fmt$(balance) + ', which doesn\'t fully cover this ' +
+      fmt$(state.fareTotal, state.currencySuffix) + ' ride. Apply it and pay the remaining ' +
+      fmt$(remaining, state.currencySuffix) + ' with another method?';
+    const textFa = 'کیف پول شما ' + fmt$(balance) + ' موجودی دارد که کل مبلغ ' +
+      fmt$(state.fareTotal, state.currencySuffix) + ' را پوشش نمی‌دهد. آن را اعمال کرده و باقی‌مانده ' +
+      fmt$(remaining, state.currencySuffix) + ' را با روش دیگری پرداخت می‌کنید؟';
+    document.getElementById('partialWalletText').textContent = isFa ? textFa : textEn;
+    document.getElementById('partialWalletModal').classList.add('open');
+  }
+
+  function applyPartialWallet(){
+    const balance = state.pendingWalletBalance || 0;
+    state.walletApplied = balance;
+    const remaining = state.fareTotal - balance;
+
+    document.getElementById('walletPayMethod').classList.add('applied');
+    document.getElementById('walletPayMethod').classList.remove('selected');
+    document.getElementById('payWalletAppliedRow').style.display = '';
+    document.getElementById('payWalletApplied').textContent = '-' + fmt$(balance, state.currencySuffix);
+    document.getElementById('payAmountLabel').innerHTML = '<span class="en">Remaining due</span><span class="fa">باقی‌مانده</span>';
+    document.getElementById('payAmount').textContent = fmt$(remaining, state.currencySuffix);
+
+    state.payMethod = null;
+    document.querySelectorAll('.pay-method').forEach(function(x){
+      if(x.dataset.pay !== 'wallet') x.classList.remove('selected');
+    });
+
+    document.getElementById('partialWalletModal').classList.remove('open');
+  }
+
+  function clearWalletApplication(){
+    state.walletApplied = 0;
+    const walletMethod = document.getElementById('walletPayMethod');
+    if(walletMethod) walletMethod.classList.remove('applied');
+    const appliedRow = document.getElementById('payWalletAppliedRow');
+    if(appliedRow) appliedRow.style.display = 'none';
+    const label = document.getElementById('payAmountLabel');
+    if(label) label.innerHTML = '<span class="en">Amount</span><span class="fa">مبلغ</span>';
+    const amountEl = document.getElementById('payAmount');
+    if(amountEl) amountEl.textContent = fmt$(state.fareTotal, state.currencySuffix);
+  }
+
+  document.getElementById('partialWalletYesBtn').addEventListener('click', applyPartialWallet);
+  document.getElementById('partialWalletNoBtn').addEventListener('click', ()=>{
+    document.getElementById('partialWalletModal').classList.remove('open');
+  });
 
   document.querySelectorAll('.pay-method').forEach(pm=>{
     pm.addEventListener('click', ()=>{
+      const method = pm.dataset.pay;
+      document.getElementById('walletError').classList.remove('show');
+      document.getElementById('remainingMethodError').classList.remove('show');
+
+      if(method === 'wallet'){
+        if(state.walletApplied > 0){
+          clearWalletApplication();
+          return;
+        }
+        const balance = (state.user && state.user.wallet) || 0;
+        if(balance <= 0){
+          document.getElementById('walletError').classList.add('show');
+          return;
+        }
+        if(balance < state.fareTotal){
+          openPartialWalletModal(balance);
+          return;
+        }
+      }
+
       document.querySelectorAll('.pay-method').forEach(x=>x.classList.toggle('selected', x===pm));
-      state.payMethod = pm.dataset.pay;
+      state.payMethod = method;
     });
   });
 
   document.getElementById('payBtn').addEventListener('click', ()=>{
+    if(state.walletApplied > 0){
+      if(!state.payMethod || state.payMethod === 'wallet'){
+        document.getElementById('remainingMethodError').classList.add('show');
+        return;
+      }
+      state.user.wallet = Math.max(0, (state.user.wallet || 0) - state.walletApplied);
+      updateWalletDisplays();
+    } else if(state.payMethod === 'wallet'){
+      const balance = (state.user && state.user.wallet) || 0;
+      if(balance < state.fareTotal){
+        if(balance > 0){
+          openPartialWalletModal(balance);
+        } else {
+          document.getElementById('walletError').classList.add('show');
+        }
+        return;
+      }
+      state.user.wallet = balance - state.fareTotal;
+      updateWalletDisplays();
+    }
+
+    if(state.mode === 'hourly'){
+      confirmScheduledRide();
+      return;
+    }
+
     showScreen('matching');
     setTimeout(()=>{
       const d = DRIVERS[Math.floor(Math.random()*DRIVERS.length)];
-      const plate = 'HRY-' + (100 + Math.floor(Math.random()*900));
+      const plate = 'SHD-' + (100 + Math.floor(Math.random()*900));
       const eta = 3 + Math.floor(Math.random()*6);
       const rating = (4.6 + Math.random()*0.35).toFixed(1);
       state.driver = {d, plate, eta, rating};
@@ -1048,21 +1543,59 @@
     setTimeout(()=>{
       // build receipt
       document.getElementById('receiptTotal').textContent = fmt$(state.fareTotal, state.currencySuffix);
-      const methodLabelEn = state.payMethod === 'card' ? 'Paid via card' : 'Paid via Apple Pay';
-      const methodLabelFa = state.payMethod === 'card' ? 'پرداخت با کارت' : 'پرداخت با Apple Pay';
+      const methodLabels = {
+        card: ['Paid via card', 'پرداخت با کارت'],
+        apple: ['Paid via Apple Pay', 'پرداخت با Apple Pay'],
+        wallet: ['Paid via wallet', 'پرداخت با کیف پول']
+      };
+      let methodLabelEn, methodLabelFa;
+      if(state.walletApplied > 0){
+        const secondary = methodLabels[state.payMethod] || methodLabels.card;
+        methodLabelEn = 'Paid via wallet (' + fmt$(state.walletApplied) + ') + ' + secondary[0].replace('Paid via ', '');
+        methodLabelFa = 'پرداخت با کیف پول (' + fmt$(state.walletApplied) + ') + ' + secondary[1];
+      } else {
+        methodLabelEn = (methodLabels[state.payMethod] || methodLabels.card)[0];
+        methodLabelFa = (methodLabels[state.payMethod] || methodLabels.card)[1];
+      }
       document.getElementById('receiptMeta').innerHTML = `<span class="en">${methodLabelEn}</span><span class="fa">${methodLabelFa}</span>`;
       document.getElementById('receiptDriver').innerHTML = state.driver ? `<span class="en">${state.driver.d.en}</span><span class="fa">${state.driver.d.fa}</span>` : '—';
       document.getElementById('receiptDist').textContent = state.pickup || '—';
       const isFaR = document.documentElement.classList.contains('fa');
+      let durationTextEn, durationTextFa;
       if(state.mode === 'ondemand'){
-        document.getElementById('receiptDur').textContent = state.bnHours + (isFaR ? ' ساعت' : ' hours') + (state.time ? ' · ' + formatTime(state.time) : '');
+        durationTextEn = state.bnHours + ' hours' + (state.time ? ' · ' + formatTime(state.time) : '');
+        durationTextFa = state.bnHours + ' ساعت' + (state.time ? ' · ' + formatTime(state.time) : '');
       } else if(state.schedType === 'daily'){
-        document.getElementById('receiptDur').textContent = (isFaR ? 'تمام روز' : 'Full day') + (state.date ? ' · ' + formatDate(state.date, isFaR) + ', ' + formatTime(state.time) : '');
+        durationTextEn = 'Full day' + (state.date ? ' · ' + formatDate(state.date, false) + ', ' + formatTime(state.time) : '');
+        durationTextFa = 'تمام روز' + (state.date ? ' · ' + formatDate(state.date, true) + ', ' + formatTime(state.time) : '');
       } else {
-        document.getElementById('receiptDur').textContent = state.hours + (isFaR ? ' ساعت' : ' hours') + (state.date ? ' · ' + formatDate(state.date, isFaR) + ', ' + formatTime(state.time) : '');
+        durationTextEn = state.hours + ' hours' + (state.date ? ' · ' + formatDate(state.date, false) + ', ' + formatTime(state.time) : '');
+        durationTextFa = state.hours + ' ساعت' + (state.date ? ' · ' + formatDate(state.date, true) + ', ' + formatTime(state.time) : '');
       }
+      document.getElementById('receiptDur').textContent = isFaR ? durationTextFa : durationTextEn;
 
       document.querySelectorAll('.star').forEach(s=>s.classList.remove('filled'));
+
+      if(state.user){
+        state.user.rides = state.user.rides || [];
+        const rideRecord = {
+          completedAt: new Date(),
+          mode: state.mode,
+          schedType: state.schedType,
+          pickup: state.pickup,
+          durationTextEn: durationTextEn,
+          durationTextFa: durationTextFa,
+          fareTotal: state.fareTotal,
+          currencySuffix: state.currencySuffix,
+          payMethod: state.payMethod,
+          driverEn: state.driver ? state.driver.d.en : null,
+          driverFa: state.driver ? state.driver.d.fa : null,
+          rating: 0
+        };
+        state.user.rides.unshift(rideRecord);
+        state.currentRideRecord = rideRecord;
+      }
+
       showScreen('receipt');
     }, 4800);
   });
@@ -1073,6 +1606,7 @@
       document.querySelectorAll('.star').forEach(s=>{
         s.classList.toggle('filled', parseInt(s.dataset.v,10) <= v);
       });
+      if(state.currentRideRecord) state.currentRideRecord.rating = v;
     });
   });
 
@@ -1143,13 +1677,18 @@
   }
 
   function openAdminView(){
+    document.getElementById('authView').style.display = 'none';
     document.getElementById('riderView').style.display = 'none';
     document.getElementById('adminView').classList.add('open');
     populateAdminForm();
   }
   function closeAdminView(){
     document.getElementById('adminView').classList.remove('open');
-    document.getElementById('riderView').style.display = '';
+    if(state.user){
+      document.getElementById('riderView').style.display = '';
+    } else {
+      document.getElementById('authView').style.display = '';
+    }
   }
 
   const adminModal = document.getElementById('adminModal');
@@ -1232,7 +1771,523 @@
 
   applySettingsToUI();
 
+  // ================= AUTH (sign in / sign up) =================
+
+  document.querySelectorAll('#authTypeToggle button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('#authTypeToggle button').forEach(b=>b.classList.toggle('active', b===btn));
+      state.authMode = btn.dataset.authtype;
+      const isSignup = state.authMode === 'signup';
+      document.getElementById('authNameField').style.display = isSignup ? '' : 'none';
+      const submitBtn = document.getElementById('authSubmitBtn');
+      submitBtn.querySelector('.en').textContent = isSignup ? 'Create account' : 'Sign in';
+      submitBtn.querySelector('.fa').textContent = isSignup ? 'ساخت حساب' : 'ورود';
+      document.getElementById('authError').classList.remove('show');
+    });
+  });
+
+  function attemptAuth(){
+    const isFa = document.documentElement.classList.contains('fa');
+    const isSignup = state.authMode === 'signup';
+    const nameVal = document.getElementById('authNameInput').value.trim();
+    const emailVal = document.getElementById('authEmailInput').value.trim();
+    const passVal = document.getElementById('authPasswordInput').value;
+    const errorEl = document.getElementById('authError');
+
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
+    const passOk = passVal.length >= 4;
+    const nameOk = !isSignup || nameVal.length > 0;
+
+    if(!emailOk || !passOk || !nameOk){
+      errorEl.querySelector('.en').textContent = !nameOk
+        ? 'Please enter your name.'
+        : !emailOk ? 'Please enter a valid email address.' : 'Password must be at least 4 characters.';
+      errorEl.querySelector('.fa').textContent = !nameOk
+        ? 'لطفاً نام خود را وارد کنید.'
+        : !emailOk ? 'لطفاً یک ایمیل معتبر وارد کنید.' : 'رمز عبور باید حداقل ۴ کاراکتر باشد.';
+      errorEl.classList.add('show');
+      return;
+    }
+
+    errorEl.classList.remove('show');
+    const displayName = isSignup ? nameVal : emailVal.split('@')[0];
+    state.user = { name: displayName, email: emailVal, phone: '', photo: null, gender: '', wallet: 0, cards: [{ brand: 'Visa', last4: '4471' }], rides: [], scheduledRides: [] };
+
+    document.getElementById('userChipName').textContent = displayName;
+    document.getElementById('userChip').style.display = '';
+    renderUserAvatar();
+    updateWalletDisplays();
+    updateCardPayOption();
+
+    document.getElementById('authView').style.display = 'none';
+    document.getElementById('riderView').style.display = '';
+
+    // clear the form for next time
+    document.getElementById('authNameInput').value = '';
+    document.getElementById('authEmailInput').value = '';
+    document.getElementById('authPasswordInput').value = '';
+  }
+
+  document.getElementById('authSubmitBtn').addEventListener('click', attemptAuth);
+  ['authNameInput','authEmailInput','authPasswordInput'].forEach(id=>{
+    document.getElementById(id).addEventListener('keydown', (e)=>{ if(e.key === 'Enter') attemptAuth(); });
+  });
+
+  document.getElementById('signOutBtn').addEventListener('click', ()=>{
+    state.user = null;
+    document.getElementById('userChip').style.display = 'none';
+    document.getElementById('riderView').style.display = 'none';
+    document.getElementById('authView').style.display = '';
+    showScreen('home');
+  });
+
+  // ================= PROFILE =================
+
+  function renderUserAvatar(){
+    if(!state.user) return;
+    const initial = (state.user.name || '?').charAt(0).toUpperCase();
+    const chipAvatar = document.getElementById('userAvatar');
+    const profileAvatar = document.getElementById('profileAvatar');
+    [chipAvatar, profileAvatar].forEach(el=>{
+      if(!el) return;
+      if(state.user.photo){
+        el.innerHTML = `<img src="${state.user.photo}" alt="">`;
+      } else {
+        el.textContent = initial;
+      }
+    });
+  }
+
+  function updateWalletDisplays(){
+    if(!state.user) return;
+    const balance = fmt$(state.user.wallet);
+    const balEl = document.getElementById('profileWalletBalance');
+    if(balEl) balEl.textContent = balance;
+    const sub = document.getElementById('walletPaySub');
+    if(sub){
+      sub.querySelector('.en').textContent = balance + ' available';
+      sub.querySelector('.fa').textContent = balance.replace('$','') + ' دلار موجودی';
+    }
+  }
+
+  const GENDER_LABELS = {
+    '': ['', ''],
+    female: ['Female', 'زن'],
+    male: ['Male', 'مرد'],
+    nonbinary: ['Non-binary', 'غیر دوجنسیتی'],
+    unspecified: ['Prefer not to say', 'ترجیح می‌دهم نگویم']
+  };
+  function updateGenderOptions(){
+    const isFa = document.documentElement.classList.contains('fa');
+    const select = document.getElementById('profileGenderInput');
+    if(!select) return;
+    Array.prototype.forEach.call(select.options, function(opt){
+      const labels = GENDER_LABELS[opt.value] || ['', ''];
+      opt.textContent = isFa ? labels[1] : labels[0];
+    });
+  }
+  updateGenderOptions();
+
+  const CARD_BRAND_LABELS = {
+    visa: ['Visa', 'ویزا'],
+    mastercard: ['Mastercard', 'مسترکارت'],
+    amex: ['American Express', 'امریکن اکسپرس'],
+    card: ['Card', 'کارت']
+  };
+
+  function detectCardBrand(digits){
+    if(digits.startsWith('4')) return 'visa';
+    if(/^5[1-5]/.test(digits)) return 'mastercard';
+    if(/^3[47]/.test(digits)) return 'amex';
+    return 'card';
+  }
+
+  function formatRideDate(d, isFa){
+    const locale = isFa ? 'fa-IR-u-ca-gregory' : 'en-US';
+    return d.toLocaleDateString(locale, { month:'short', day:'numeric' }) + ' · ' + d.toLocaleTimeString(locale, { hour:'numeric', minute:'2-digit' });
+  }
+
+  function renderHistoryList(){
+    if(!state.user) return;
+    const isFa = document.documentElement.classList.contains('fa');
+    const list = document.getElementById('historyList');
+    const rides = state.user.rides || [];
+    if(rides.length === 0){
+      list.innerHTML = `<div class="history-empty"><span class="en">No rides yet — your trips will show up here once you book one.</span><span class="fa">هنوز سفری ثبت نشده — سفرهای شما پس از رزرو اینجا نمایش داده می‌شوند.</span></div>`;
+      return;
+    }
+    list.innerHTML = rides.map(function(r){
+      const durationText = isFa ? r.durationTextFa : r.durationTextEn;
+      const driverName = isFa ? (r.driverFa || '—') : (r.driverEn || '—');
+      const fare = fmt$(r.fareTotal, r.currencySuffix);
+      const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+      const notRated = isFa ? 'بدون امتیاز' : 'Not rated';
+      return `
+        <div class="ride-card">
+          <div class="rc-top">
+            <span class="rc-date">${formatRideDate(r.completedAt, isFa)}</span>
+            <span class="rc-fare">${fare}</span>
+          </div>
+          <div class="rc-loc">${escapeHtml(r.pickup || '')}</div>
+          <div class="rc-meta">${durationText}</div>
+          <div class="rc-bottom">
+            <span>${escapeHtml(driverName)}</span>
+            <span class="rc-stars">${r.rating ? stars : notRated}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  document.getElementById('toHistoryBtn').addEventListener('click', ()=>{
+    renderHistoryList();
+    showScreen('history');
+  });
+
+  // ================= SCHEDULED RIDES & REMINDERS =================
+
+  function buildSchedDateTime(){
+    // combine the date + time fields used by Schedule a drive into a real Date
+    const dateStr = state.date;
+    const timeStr = state.time || '09:00';
+    if(!dateStr) return null;
+    return new Date(dateStr + 'T' + timeStr + ':00');
+  }
+
+  function confirmScheduledRide(){
+    const dt = buildSchedDateTime();
+    const isDaily = state.schedType === 'daily';
+    const isFa = document.documentElement.classList.contains('fa');
+
+    const record = {
+      id: Date.now() + '_' + Math.floor(Math.random()*1000),
+      dateTime: dt,
+      schedType: state.schedType,
+      hours: state.hours,
+      pickup: state.pickup,
+      fareTotal: state.fareTotal,
+      currencySuffix: state.currencySuffix,
+      reminderAt: dt ? new Date(dt.getTime() - 2*60*60*1000) : null,
+      reminderShown: false
+    };
+
+    state.user.scheduledRides = state.user.scheduledRides || [];
+    state.user.scheduledRides.push(record);
+    state.user.scheduledRides.sort((a,b)=> (a.dateTime||0) - (b.dateTime||0));
+
+    // ask for notification permission once, so real 2-hour-before reminders can use it
+    if(window.Notification && Notification.permission === 'default'){
+      Notification.requestPermission().catch(function(){});
+    }
+
+    // populate confirmation screen
+    const dateLabel = dt ? (formatDate(state.date, isFa) + ', ' + formatTime(state.time)) : '—';
+    document.getElementById('schedConfirmDate').textContent = dateLabel;
+    document.getElementById('schedConfirmLoc').textContent = state.pickup || '—';
+    document.getElementById('schedConfirmMeta').textContent = isDaily
+      ? (isFa ? 'تمام روز' : 'Full day')
+      : (state.hours + (isFa ? ' ساعت' : ' hours'));
+    document.getElementById('schedConfirmTotal').textContent = fmt$(state.fareTotal, state.currencySuffix);
+
+    showScreen('schedConfirm');
+  }
+
+  function formatSchedDateTime(dt, isFa){
+    if(!dt) return '—';
+    const locale = isFa ? 'fa-IR-u-ca-gregory' : 'en-US';
+    return dt.toLocaleDateString(locale, { weekday:'short', month:'short', day:'numeric' }) + ' · ' +
+           dt.toLocaleTimeString(locale, { hour:'numeric', minute:'2-digit' });
+  }
+
+  function renderScheduledRides(){
+    if(!state.user) return;
+    const isFa = document.documentElement.classList.contains('fa');
+    const section = document.getElementById('scheduledRidesSection');
+    const list = document.getElementById('scheduledRidesList');
+    const rides = (state.user.scheduledRides || []).filter(function(r){
+      return !r.dateTime || r.dateTime.getTime() > Date.now();
+    });
+
+    if(rides.length === 0){
+      section.style.display = 'none';
+      list.innerHTML = '';
+      return;
+    }
+    section.style.display = '';
+    list.innerHTML = rides.map(function(r){
+      const isDaily = r.schedType === 'daily';
+      const metaText = isDaily
+        ? (isFa ? 'تمام روز' : 'Full day')
+        : (r.hours + (isFa ? ' ساعت' : ' hours'));
+      return `
+        <div class="sched-card">
+          <div class="sc-top">
+            <span class="sc-date">${formatSchedDateTime(r.dateTime, isFa)}</span>
+            <button class="sc-cancel" data-cancel-sched="${r.id}" type="button" title="Cancel">×</button>
+          </div>
+          <div class="sc-loc">${escapeHtml(r.pickup || '')}</div>
+          <div class="sc-meta">${metaText} · ${fmt$(r.fareTotal, r.currencySuffix)}</div>
+          <div class="sc-reminder">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg>
+            <span class="en">Reminder set for 2 hours before</span><span class="fa">یادآوری ۲ ساعت قبل تنظیم شد</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    list.querySelectorAll('[data-cancel-sched]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        const id = btn.dataset.cancelSched;
+        state.user.scheduledRides = state.user.scheduledRides.filter(function(r){ return r.id !== id; });
+        renderScheduledRides();
+      });
+    });
+  }
+
+  document.getElementById('schedConfirmDoneBtn').addEventListener('click', ()=>{
+    document.getElementById('hourlyPickupInput').value = '';
+    state.schedType = 'hourly';
+    document.querySelectorAll('#schedTypeToggle button').forEach(function(b){
+      b.classList.toggle('active', b.dataset.schedtype === 'hourly');
+    });
+    document.getElementById('schedHourlyOnly').style.display = '';
+    document.getElementById('schedDailyOnly').style.display = 'none';
+    document.getElementById('schedRateNote').style.display = '';
+    renderScheduledRides();
+    showScreen('home');
+  });
+
+  function showReminderBanner(ride){
+    const isFa = document.documentElement.classList.contains('fa');
+    const banner = document.getElementById('reminderBanner');
+    const text = (isFa ? 'سفر شما به ' : 'Your ride to ') + (ride.pickup || (isFa ? 'مقصد' : 'your destination')) +
+      (isFa ? ' در ۲ ساعت دیگر است.' : ' is in 2 hours.');
+    document.getElementById('reminderBannerText').textContent = text;
+    banner.classList.add('show');
+
+    if(window.Notification && Notification.permission === 'granted'){
+      try {
+        new Notification('SheDrives — ride reminder', { body: text });
+      } catch(e){ /* ignore */ }
+    }
+  }
+
+  document.getElementById('reminderBannerClose').addEventListener('click', ()=>{
+    document.getElementById('reminderBanner').classList.remove('show');
+  });
+
+  function checkReminders(){
+    if(!state.user || !state.user.scheduledRides) return;
+    const now = Date.now();
+    state.user.scheduledRides.forEach(function(r){
+      if(r.reminderShown || !r.reminderAt || !r.dateTime) return;
+      if(now >= r.reminderAt.getTime() && now < r.dateTime.getTime()){
+        r.reminderShown = true;
+        showReminderBanner(r);
+      }
+    });
+  }
+  setInterval(checkReminders, 30000);
+
+  function renderCardList(){
+    if(!state.user) return;
+    const list = document.getElementById('cardList');
+    const cards = state.user.cards || [];
+    if(cards.length === 0){
+      list.innerHTML = `<div style="color:var(--graphite); font-size:0.85rem; padding:14px 0;"><span class="en">No cards saved — add one below.</span><span class="fa">کارتی ذخیره نشده — یکی در پایین اضافه کنید.</span></div>`;
+      return;
+    }
+    list.innerHTML = cards.map(function(c, i){
+      const labels = CARD_BRAND_LABELS[c.brand] || CARD_BRAND_LABELS.card;
+      return `
+        <div class="driver-row">
+          <div class="d-init">${labels[0].charAt(0)}</div>
+          <div class="d-name">${labels[0]} •••• ${c.last4}</div>
+          <button class="d-remove" data-remove-card="${i}" type="button">×</button>
+        </div>
+      `;
+    }).join('');
+    list.querySelectorAll('[data-remove-card]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        const idx = parseInt(btn.dataset.removeCard, 10);
+        state.user.cards.splice(idx, 1);
+        renderCardList();
+        updateCardPayOption();
+      });
+    });
+  }
+
+  function updateCardPayOption(){
+    if(!state.user) return;
+    const cards = state.user.cards || [];
+    const cardOption = document.getElementById('cardPayMethod');
+    if(cards.length === 0){
+      cardOption.style.display = 'none';
+      if(state.payMethod === 'card'){
+        state.payMethod = 'wallet';
+        document.querySelectorAll('.pay-method').forEach(function(x){
+          x.classList.toggle('selected', x.dataset.pay === 'wallet');
+        });
+      }
+      return;
+    }
+    cardOption.style.display = '';
+    const primary = cards[0];
+    const labels = CARD_BRAND_LABELS[primary.brand] || CARD_BRAND_LABELS.card;
+    document.getElementById('cardPayName').innerHTML =
+      `<span class="en">${labels[0]} •••• ${primary.last4}</span><span class="fa">${labels[1]} •••• ${primary.last4}</span>`;
+    document.getElementById('cardPaySub').innerHTML =
+      `<span class="en">${labels[0]}</span><span class="fa">${labels[1]}</span>`;
+  }
+
+  document.getElementById('addCardBtn').addEventListener('click', function(){
+    if(!state.user) return;
+    const input = document.getElementById('newCardInput');
+    const digits = input.value.replace(/\D/g, '');
+    if(digits.length < 4) return;
+    const last4 = digits.slice(-4);
+    const brand = detectCardBrand(digits);
+    state.user.cards = state.user.cards || [];
+    state.user.cards.push({ brand: brand, last4: last4 });
+    input.value = '';
+    renderCardList();
+    updateCardPayOption();
+  });
+  document.getElementById('newCardInput').addEventListener('keydown', function(e){
+    if(e.key === 'Enter') document.getElementById('addCardBtn').click();
+  });
+
+  document.getElementById('userChipOpenBtn').addEventListener('click', ()=>{
+    if(!state.user) return;
+    document.getElementById('profileNameInput').value = state.user.name || '';
+    document.getElementById('profileEmailInput').value = state.user.email || '';
+    document.getElementById('profilePhoneInput').value = state.user.phone || '';
+    document.getElementById('profileGenderInput').value = state.user.gender || '';
+    updateWalletDisplays();
+    renderUserAvatar();
+    renderCardList();
+    showScreen('profile');
+  });
+
+  document.getElementById('profilePhotoBtn').addEventListener('click', ()=>{
+    document.getElementById('profilePhotoInput').click();
+  });
+
+  document.getElementById('profilePhotoInput').addEventListener('change', (e)=>{
+    const file = e.target.files && e.target.files[0];
+    if(!file || !state.user) return;
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      state.user.photo = reader.result;
+      renderUserAvatar();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.querySelectorAll('[data-add-funds]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(!state.user) return;
+      state.user.wallet += parseFloat(btn.dataset.addFunds);
+      updateWalletDisplays();
+    });
+  });
+
+  document.getElementById('profileSaveBtn').addEventListener('click', ()=>{
+    if(!state.user) return;
+    const name = document.getElementById('profileNameInput').value.trim();
+    const email = document.getElementById('profileEmailInput').value.trim();
+    const phone = document.getElementById('profilePhoneInput').value.trim();
+    const gender = document.getElementById('profileGenderInput').value;
+
+    state.user.name = name || state.user.name;
+    state.user.email = email || state.user.email;
+    state.user.phone = phone;
+    state.user.gender = gender;
+
+    document.getElementById('userChipName').textContent = state.user.name;
+    renderUserAvatar();
+
+    const toast = document.getElementById('profileSaved');
+    toast.classList.add('show');
+    setTimeout(()=> toast.classList.remove('show'), 1800);
+  });
+
+  // ================= HELP & SUPPORT =================
+
+  const SUPPORT_EMAIL = 'support@shedrives.com';
+
+  document.getElementById('toHelpBtn').addEventListener('click', ()=>{
+    document.getElementById('helpError').classList.remove('show');
+    document.getElementById('helpSentNote').classList.remove('show');
+    showScreen('help');
+  });
+
+  document.getElementById('helpSendBtn').addEventListener('click', ()=>{
+    const subject = document.getElementById('helpSubjectInput').value.trim();
+    const message = document.getElementById('helpMessageInput').value.trim();
+    const errorEl = document.getElementById('helpError');
+    const sentNote = document.getElementById('helpSentNote');
+
+    if(!message){
+      errorEl.classList.add('show');
+      sentNote.classList.remove('show');
+      return;
+    }
+    errorEl.classList.remove('show');
+
+    const userLine = state.user ? ('From: ' + state.user.name + ' <' + state.user.email + '>\n\n') : '';
+    const body = encodeURIComponent(userLine + message);
+    const subj = encodeURIComponent(subject || 'SheDrives support request');
+    window.location.href = 'mailto:' + SUPPORT_EMAIL + '?subject=' + subj + '&body=' + body;
+
+    sentNote.classList.add('show');
+    document.getElementById('helpSubjectInput').value = '';
+    document.getElementById('helpMessageInput').value = '';
+  });
+
 })();
+</script>
+
+<!--
+  GOOGLE PLACES AUTOCOMPLETE
+  The two location fields (Book now's "Location" and Schedule a drive's "Location")
+  use Google's own address autocomplete, so they'll suggest real, verified addresses
+  the same way Google Maps does.
+
+  To turn this on:
+  1. Go to https://console.cloud.google.com/ and create a project (or use an existing one).
+  2. Enable the "Places API" (and "Maps JavaScript API") for that project.
+  3. Create an API key under "APIs & Services" -> "Credentials."
+  4. Restrict the key to "HTTP referrers" and add your site's domain (e.g. your-username.github.io/*)
+     so it can't be used from anywhere else.
+  5. Replace PASTE_YOUR_GOOGLE_MAPS_API_KEY_HERE below with that key.
+
+  Note: Google requires a billing account on the project even for free-tier usage
+  (they currently give a recurring free monthly credit that covers moderate use),
+  and the widget won't suggest addresses until a valid, unrestricted-enough key is in place.
+  Until then, these fields just work as plain text inputs.
+-->
+<script>
+  window.initGoogleMaps = function(){
+    try {
+      if(!window.google || !google.maps || !google.maps.places) return;
+      const opts = {
+        fields: ['formatted_address', 'name', 'geometry'],
+        types: ['geocode', 'establishment']
+      };
+      ['bnLocationInput', 'hourlyPickupInput'].forEach(function(id){
+        const input = document.getElementById(id);
+        if(!input) return;
+        input.setAttribute('autocomplete', 'off');
+        new google.maps.places.Autocomplete(input, opts);
+      });
+    } catch(e) {
+      console.warn('Google Places Autocomplete did not initialize:', e);
+    }
+  };
+</script>
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=PASTE_YOUR_GOOGLE_MAPS_API_KEY_HERE&libraries=places&callback=initGoogleMaps">
 </script>
 
 </body>
